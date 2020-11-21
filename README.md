@@ -1,1 +1,1 @@
-LaTeX tips, advice and best practices for scientific writing
+# LaTeX tips, advice and best practices for scientific writing
