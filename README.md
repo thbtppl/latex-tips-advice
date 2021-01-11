@@ -13,14 +13,14 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 
 ## Contents
 
-[My setup](#my-setup)
-
-[General advice](#general-advice)
-
-[PDF production](#pdf-production)
-
-[Bibliography](#bibliography)
-
+* [My setup](#my-setup)
+* [General advice](#general-advice)
+* [Packages](#packages)
+* [Correct typesetting](#correct-typesetting)
+* [Maths](#maths)
+* [PDF production](#pdf-production)
+* [Bibliography](#bibliography)
+* [Typesetting](#typesetting)
 
 ## My setup
 
@@ -32,7 +32,7 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 
 I recommend using `latexmk` (default in LaTeX workshop) to compile the document.
 The [`latexmkrc`](examples/latexmkrc) config file placed at the root of your project allows to declare your main source file, the desired PDF output and the path to your self-defined class/package/preamble files.
-You can also declare the folders containing your external graphics, which is more [memory efficient](http://www.texfaq.org/FAQ-graphicspath) than using `\graphicspath` within your `.tex` files.
+You can also declare the folders containing your external graphics, which is cleaner and more [memory efficient](http://www.texfaq.org/FAQ-graphicspath) than using `\graphicspath` within your `.tex` files.
 
 
 ## General advice
@@ -54,7 +54,15 @@ You can also declare the folders containing your external graphics, which is mor
     * Define commands with semantically appropriate names <!--, such as `\newcommand*{\contentstitle} {Table of Contents}`-->
     * Do not put hard-coded settings within your content
 
-* Use the `import` package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled.
+* Use the `import` package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled. For example, you could have in your main file
+
+    ```
+    \import{./}{titlepage.tex}
+    \import{./chapters/chapter1/}{chapter1.tex}
+    \import{./chapters/chapter2/}{chapter2.tex}
+    \import{./appendices/}{appendix1.tex}
+    ```
+    Don't forget the trailing '`/`' !
 
 * Use `git` and set up a remote repository (e.g. GitHub). Besides offering a natural back-up, you can quickly see current changes within a complex document, and see where you introduced code that produced bugs.
 
@@ -66,6 +74,118 @@ You can also declare the folders containing your external graphics, which is mor
     \usepackage[all,warning]{onlyamsmath}
     ```
     in your preamble to automatically warn you when using deprecated features in terms of packages and commands, including maths.
+
+
+## Packages
+
+* Packages you should probably use
+
+    * `import`: include external files from different folders
+    * `fontenc`: font encoding
+    * `ìnputenc`: input encoding
+    * `babel` (or `polyglossia` if you're using `XeLaTeX` or `LuaLaTeX`): use proper typographical rules adapted to document language
+    * `microtype`: automatic font spacing adjustments for improved aesthetics
+    * `mathtools`: math support with improvements to `amsmath`
+    * `biblatex`: bibliography
+    * `csquotes`: in-line and display quotations consistent with the document language
+    * `tocloft`: customize layout of the list of figures/tables
+    * `titlesec`: customize section titles and page headers/footers
+    * `tocbibind`: include bibliography in the table of contents
+    * `appendix`: appendix support and typesetting of appendix titles
+    * `setspace`: line spacing of the document
+    * `geometry`: customize page layout and margins
+    * `parskip`: adjust spacing between paragraph and indentation
+    * `footmisc`: customize the appearance of footnotes
+    * `booktabs`: the only package for publication-quality tables
+    * `graphicx`: include external graphics
+    * `tikz`: produce vector graphics
+    * `caption`: customize the appearance of captions
+    * `subcaption`: allows individual caption for each subfigure of a figure
+    * `siunitx`: ensure consistent use of numbers and/or units across the document
+    * `pdfx`: for PDF/A compliance
+    * `xcolor`: support for colors with different color models
+    * `hyperref`: to produce hyperlinks everywhere in the document
+    * `cleveref`: smart cross-referencing for document components
+    * `bookmark`: handle PDF bookmarks
+    * `glossaries-extra`: support for glossaries, lists of symbols/acronyms
+
+* If compatible, try to pass the general options of your project to the `\documentclass` command. They will be seen by relevant packages.
+For example, the language option in `\documentclass[UKenglish]{article}` will be seen by both `babel` and `cleveref`.
+
+* Mind the order of packages in the preamble:
+
+    * `inputenc` should be loaded before `fontenc`
+    * If using the option [babel=true], `microtype` should be loaded after babel
+    * `biblatex` should be loaded after `babel`
+    * Some font packages like `newpxtext` should be loaded after `babel`
+    * `parskip` should be loaded after `tocloft`
+    * `cleveref` should be loaded after `hyperref`
+    * `bookmark` should be loaded after `cleveref`
+    * `glossaries[-extra]` should be loaded last
+
+    The manual of `pdfx` recommends to load it as early as possible, but since it automatically loads `hyperref` I would recommend loading it just before `hyperref`.
+
+
+## Correct typesetting
+
+* Use one sentence per line in your document:
+
+    ```
+    This is a sentence.
+    Followed by another sentence.
+    ```
+    and not
+
+    ```
+    This is a sentence. Followed by another sentence.
+    ```
+    On the one hand, it helps to write readable and maintainable source code. On the other hand, it leads to easier to read commits and `git diff`'s as one change in your document will correspond to one sentence only.
+
+* The only recommended way to start a new paragraph is using a line break:
+
+    ```
+    ... and the sentence ends.
+
+    This is a new paragraph.
+    ```
+    Never use `\par` or `\\`. Note this impacts on how you obtain correct vertical spacing when developing your ideas in the text. For example, you should write
+
+    ```
+    described in \cref{eq1},
+    \begin{equation}
+      y = x
+    \label{eq1}
+    \end{equation}
+    ```
+    and not
+
+    ```
+    described in \cref{eq1},
+
+    \begin{equation}
+      y = x
+    \label{eq1}
+    \end{equation}
+    ```
+
+* To force whitespace after a user-defined commmand that produces text, add empty curly braces: `\com{}` instead of `\com`
+
+* Pay attention to correct spacing when using a period within a sentence. The `.\` and `\@` commands tell LaTeX your sentence does not end.
+    * `This is a sentence w.\ a forced inter-word space.`
+    * `This is done by XYZ\@. This is a new sentence.`
+    
+    The latter case should not happen often if you use the `glossaries[-extra]` package for your abbreviations.
+
+* Add to your preamble
+
+    ```
+    \widowpenalty=10000
+    \clubpenalty=10000
+    ```
+    to force LaTeX to avoid widows and orphans (dangling lines at the beginning or end of a paragraph separated from the rest).
+
+## Maths
+
 
 
 ## PDF production
@@ -97,46 +217,6 @@ Among other features it must embed all fonts and include standardised metadata.
 * The preflight tool can also repair non-compliant PDFs produced with `pdflatex`.
 
 
-## Typesetting
-
-Use one sentence per line in your document.
-It helps to write readable and maintainable source code.
-In this way, one change in your document will correspond to one sentence only.
-This leads to easier to read commits and `git diff`'s.
-
-The only recommended way to start a new paragraph is using a line break:
-```
-... and the sentence ends.
-
-This is a new paragraph.
-```
-Never use `\par` or `\\` manually.
-Note this impacts on how you should obtain correct vertical spacing when developing your ideas in the text.
-For example, you should write
-```
-described in \cref{eq1},
-\begin{equation}
-    y = x
-\end{equation}
-```
-and not
-```
-described in \cref{eq1},
-
-\begin{equation}
-    y = x
-\end{equation}
-```
-
-To force whitespace after a user-defined commmand, add empty curly braces: `\com{}` instead of `\com`
-
-Pay attention to correct spacing when using a period within a sentence.
-The `.\` and `\@` commands tell LaTeX your sentence does not end.
-    - `This is a sentence w.\ a forced inter-word space.`
-    - `This is done by XYZ\@. This is a new sentence.`
-The latter case should not happen often if you use the `glossaries[-extra]` package for your abbreviations.
-
-
 ## Syntax and spell-check
 
 * The R package [`TeXCheckR`](https://github.com/HughParsonage/TeXCheckR) is an excellent syntax/spell checker for LaTeX. It can also check the structure of your `.bib` file.
@@ -145,13 +225,23 @@ The latter case should not happen often if you use the `glossaries[-extra]` pack
 
 * The `lacheck` utility shipped with most LaTeX distributions is also good at detecting questionable syntax in your `.tex` files. Note some false positives will be raised due to the use of some packages. `chktex` performs poorly compared to `lacheck`.
 
-* You can check your bibliography using `biber --tool --validate-datamodel main.bib`
+* You can check your bibliography file using `biber --tool --validate-datamodel main.bib`.
 
-* You can detect 'hidden' Unicode characters by searching the string `[^\x00-\x7f]` as a regular expression.
+* You can detect 'hidden' Unicode characters in your files by searching the string `[^\x00-\x7f]` as a regular expression.
 
-* Use the Python package `pdfx` https://pypi.org/project/pdfx/ (not to be mistaken with the [`pdfx`](https://ctan.org/pkg/pdfx?lang=en) LaTeX package) to check for broken links in your PDF.
+* Use the Python package `pdfx` https://pypi.org/project/pdfx/ (not to be mistaken with the [`pdfx`](https://ctan.org/pkg/pdfx?lang=en) LaTeX package) to detect broken hyperlinks in your PDF.
 
-## Floats (graphics and tables)
+
+## Floating objects
+
+* Many people say LaTeX is the worst for float placement. This is simply wrong.
+I would suggest using `\begin{figure}` without any placement specifier '`[!t]`' until you have the final version of the document.
+From that point onwards, you can add '`[!t]`' to force the float at the top, or even '`[!h]`' is usually good at
+Stop saying LaTeX messes up graphs!
+
+* Add `\g@addto@macro\@floatboxreset\centering` to your preamble to avoid the need to add `\centering` for each figure.
+
+## Including graphics 
 
 I suggest to output your graphics in the EPS format, and to convert them to PDF using the `epstopdf` utility included in TeX distributions.
 The .pdf backend of matplotlib is not optimized, and I always observe a factor of size decrease between 10 and 100 between exporting in .eps and converting to pdf instead of saving directly in pdf.
@@ -160,58 +250,12 @@ The pgf format is useful, but is also known to yields bloated graphics files as 
 
 The utility `pdfcrop` is very useful to remove the unneeded white space surrounding your figure.
 
-Add `\g@addto@macro\@floatboxreset\centering` to your preamble to avoid the need of adding `\centering` for each figure.
-
-Everyone says LaTeX is the worst for float placement.
-This is simply wrong.
-I would suggest using `\begin{figure}` without any placement specifier '`[!t]`' until you have the final version of the document.
-From that point onwards, you can add '`[!t]`' to force the float at the top, or even '`[!h]`' is usually good at
-Stop saying LaTeX messes up graphs!
-
-## Packages
-
-It is sad many journal editors force users to use the archaic `natbib` instead of `biblatex`, for example. 
-
-% --- Warn when use of obsolete/deprecated/non-amsmath commands
-% \RequirePackage[l2tabu,orthodox]{nag}
-% \RequirePackage[all,warning]{onlyamsmath}
-
-If compatible, try to pass the general options of your project in the `\documentclass` command.
-They will be seen by relevant packages.
-For example, the language option in `\documentclass[UKenglish]{article}` will be seen by `babel` and `cleveref`.
-
-
-Mind the order of packages in the preamble:
-
-inputend should be loaded before fontenc
-
-if using the option [babel=true], microtype should be loaded after babel
-
-biblatex should be loaded after babel
-
-parskip should be loaded after tocloft
-
-cleveref should be loaded after hyperref
-
-bookmark sohuld be loaded after cleveref?
-
-glossaries[-extra] should be loaded last
-
-The manual of pdfx recommends loading among the first packages, but I would recommend loading it just before hyperref since it automatically loads hyperref.
-An end of an preamble ensuring maximal compatibility looks like
-
-```
-\usepackage[a-2b]{pdfx}
-\usepackage{hyperref}
-\usepackage{cleveref}
-\usepackage{bookmark}
-```
 
 ## Bibliography
 
-* First, you may want to use the recent `biblatex` *package* with the `biber` *backend*. Avoid using the old `natbib` *package* which uses the `bibtex` *backend*. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib). The main reason is that `biblatex` handles accentuated letters directly.
+* First, you may want to use the recent `biblatex` *package* with the `biber` *backend* which handles accentuated letters seamlessly. Avoid using the old `natbib` *package* which uses the `bibtex` *backend*. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib).
 
-* Find the biblatex package (e.g. `biblatex-phys`) closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customise.
+* Find the biblatex package (e.g. `biblatex-phys`) closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customize.
 
 * Never, ever trust `.bib` entries given by journals, editors or Zotero/Mandeley. They are often filled with errors. Yes, it takes time to check individual fields, but I can't stress enough how many typos I was able to find.
 
@@ -250,17 +294,10 @@ An end of an preamble ensuring maximal compatibility looks like
 
 * Although many journals use the term "issue" as a subdivision in the volume, the corresponding entry for numerical values in `biblatex` is `number`, not `issue`.
 
-* The correct hyphenation for pages is an en-dash: `pages = {100--200}`, not `-`.
+* The correct hyphenation for pages is an en-dash: `pages = {100--200}`, not a hyphen `-`.
 
 * If an entry has `volume = {1}`, double check whether there is an actual volume number. Some editors mistakenly add it.
 
 * Use `date` instead of `year` with `biblatex` as it offers greater flexibility.
 
 * If an entry is in a different language than the main language of the document, use the `langid` field to get correct hyphenation patterns.
-
-Add
-```
-\widowpenalty=10000
-\clubpenalty=10000
-```
-to your preamble to force the avoidance of widows and orphans at the beginning/end of pages.
