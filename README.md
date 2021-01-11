@@ -19,6 +19,9 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 
 [PDF production](#pdf-production)
 
+[Bibliography](#bibliography)
+
+
 ## My setup
 
 * [TeXLive](https://www.tug.org/texlive/)
@@ -136,16 +139,17 @@ The latter case should not happen often if you use the `glossaries[-extra]` pack
 
 ## Syntax and spell-check
 
-You can detect 'hidden' Unicode characters by searching the string `[^\x00-\x7f]` as a regular expression.
+* The R package [`TeXCheckR`](https://github.com/HughParsonage/TeXCheckR) is an excellent syntax/spell checker for LaTeX. It can also check the structure of your `.bib` file.
 
-Use the Python package `pdfx` https://pypi.org/project/pdfx/ (not to be mistaken with the [pdfx](https://ctan.org/pkg/pdfx?lang=en) LaTeX package) to check for broken links in your PDF.
+* The [LTeX](https://marketplace.visualstudio.com/items?itemName=valentjn.vscode-ltex) extension of VS Code is a good spell/grammar checker, based on [LanguageTool](https://languagetool.org/).
 
-The `lacheck` utility is good at detecting questionable syntax in your .tex files. Note however some false positives will be raised due to the use of packages.
-No point in using `chktex`.
+* The `lacheck` utility shipped with most LaTeX distributions is also good at detecting questionable syntax in your `.tex` files. Note some false positives will be raised due to the use of some packages. `chktex` performs poorly compared to `lacheck`.
 
-`TeXCheckR` is at the moment the best syntax/spell checker for LaTeX.
+* You can check your bibliography using `biber --tool --validate-datamodel main.bib`
 
-You can check your bibliography using `biber --tool --validate-datamodel references.bib`
+* You can detect 'hidden' Unicode characters by searching the string `[^\x00-\x7f]` as a regular expression.
+
+* Use the Python package `pdfx` https://pypi.org/project/pdfx/ (not to be mistaken with the [`pdfx`](https://ctan.org/pkg/pdfx?lang=en) LaTeX package) to check for broken links in your PDF.
 
 ## Floats (graphics and tables)
 
@@ -244,7 +248,7 @@ An end of an preamble ensuring maximal compatibility looks like
 
 * For long given/last names (e.g. Brazilian), you may use `author = {given=Carlos Santos de Azevedo, given-i=C S {de\nopunct} A, family=Silva}` to get correct abbreviation in your reference list.
 
-* Although many journals use the term "issue" as a subdivision in the volume, the corresponding entry for numerical values in `biblatex` is "number", not "issue".
+* Although many journals use the term "issue" as a subdivision in the volume, the corresponding entry for numerical values in `biblatex` is `number`, not `issue`.
 
 * The correct hyphenation for pages is an en-dash: `pages = {100--200}`, not `-`.
 
@@ -252,6 +256,7 @@ An end of an preamble ensuring maximal compatibility looks like
 
 * Use `date` instead of `year` with `biblatex` as it offers greater flexibility.
 
+* If an entry is in a different language than the main language of the document, use the `langid` field to get correct hyphenation patterns.
 
 Add
 ```
