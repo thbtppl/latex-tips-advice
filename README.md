@@ -205,7 +205,7 @@ An end of an preamble ensuring maximal compatibility looks like
 
 ## Bibliography
 
-* First, you may want to use the recent `biblatex` *package* with the `biber` *backend*. Avoid using the old `natbib` package which uses the `bibtex` backend. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib).
+* First, you may want to use the recent `biblatex` *package* with the `biber` *backend*. Avoid using the old `natbib` *package* which uses the `bibtex` *backend*. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib). The main reason is that `biblatex` handles accentuated letters directly.
 
 * Find the biblatex package (e.g. `biblatex-phys`) closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customise.
 
@@ -222,25 +222,36 @@ An end of an preamble ensuring maximal compatibility looks like
     ```
     instead of
     
-    ````
+    ```
     title = {On the electrodynamics of moving bodies}
     ```
-    In this way, you can easily switch from title-case to sentence-case using a `biblatex` option. Conversely if you forget that and the bibliography needs to be title-case, you will have add capitals manually if your biblatex style.
+    In this way, you can easily switch from title-case to sentence-case using a `biblatex` option. Conversely if you forget that and the bibliography needs to be title-case, you will have to add all missing capitals manually.
 
-Surround words that remain capitalised at all times using curly brackets:
-title = {A Numerical Study of the Temporal Eigenvalue Spectrum of the {Blasius} Boundary Layer}
-But do not put the whole sentence between brackets (like stupid editors/software do) as it can affect the kerning between words.
+* Surround words that remain capitalised at all times using curly brackets:
 
-For author names, use the "author = {Doe, John and Dummy, Name}" format. Using "author = {J. Doe}" is fine, but the former helps biblatex to clearly identify name particles and abbreviate correctly, especially for authors with prefixes.
+    ```
+    title = {Protein Measurement with the {Folin} Phenol Reagent}
+    ```
+    Make sure it is the entire word and not the first letter (e.g. not `{F}olin`) as the kerning (spacing) between letters could be affected.
+    But do not put the whole title between double brackets (like some stupid editors automatically do) such as
 
-Although many journals use the term "issue", the corresponding entry for biblatex is "number", not "issue".
+    ```
+    title = {{Protein Measurement with the Folin Phenol Reagent}}
+    ```
+    since it won't be subjected to style changes.
 
-Put an en-dash for pages: "100--200".
+* For author names, use the `author = {Last Name, First Name}` format. Using `author = {J. Doe}` is fine for simple names, but the former helps `biblatex` to clearly identify name particles and abbreviate correctly, especially for authors with prefixes like 'de' in French or 'van' in Dutch or whose last name contains two words.
 
-If an entry has "1" for the volume, double check whether there is an actual volume number.
-Some editors mistakenly add it.
+* For long given/last names (e.g. Brazilian), you may use `author = {given=Carlos Santos de Azevedo, given-i=C S {de\nopunct} A, family=Silva}` to get correct abbreviation in your reference list.
 
-Use "date" instead of "year" with biblatex as it offers greater flexibility.
+* Although many journals use the term "issue" as a subdivision in the volume, the corresponding entry for numerical values in `biblatex` is "number", not "issue".
+
+* The correct hyphenation for pages is an en-dash: `pages = {100--200}`, not `-`.
+
+* If an entry has `volume = {1}`, double check whether there is an actual volume number. Some editors mistakenly add it.
+
+* Use `date` instead of `year` with `biblatex` as it offers greater flexibility.
+
 
 Add
 ```
