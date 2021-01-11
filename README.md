@@ -52,13 +52,13 @@ You can also declare the folders containing your external graphics, which is mor
 
 * Use UTF-8 encoding (`\usepackage[utf8]{inputenc}`) to typeset your document using accents (ü,é) directly, and to allow spell-checkers parsing source files to correctly process such words.
 
-* Do not use obsolete packages or commands. It is sad many journal editors force users to use the archaic `natbib` instead of `biblatex`, for example. Add
-```
-\usepackage[l2tabu,orthodox]{nag}
-\usepackage[all,warning]{onlyamsmath}
-```
-in your preamble to automatically warn you when using deprecated features in terms of packages and math commands.
-
+* Do not use obsolete packages or commands. Add
+    ```
+    \usepackage[l2tabu,orthodox]{nag}
+    \usepackage[all,warning]{onlyamsmath}
+    ```
+    in your preamble to automatically warn you when using deprecated features in terms of packages and commands, including maths.
+    It is sad many journal editors force users to use the archaic `natbib` instead of `biblatex`, for example. 
 
 ## PDF production
 
