@@ -2,11 +2,12 @@
 
 ## Who's this for?
 
-This series of tips and tricks targets beginner to intermediate users and compiles recommendations gathered along the writing of my PhD thesis.
-LaTeX has grown to a mature ecosystem for typesetting beautiful documents, however the task of writing a large document can be sometimes daunting.
-This repository aims at helping users to overcome the steep learning curve of LaTeX and sharing things I wished I had known along the way.
-As of 2021, LaTeX2e offers endless possibilities in terms of document features, but at the cost of loading packages manually and dealing with rather obscure commands at times.
+As of 2021, LaTeX2e (LaTeX) has grown to a mature ecosystem for typesetting beautiful documents with endless design possibilities.
+However, it has a steep learning curve, and writing a large document can be sometimes daunting, especially for people without a 'coding' mindset.
+Since [LaTex3 won't replace and unify LaTeX2e components](https://tex.stackexchange.com/a/572177), you still need to load manually many individual packages and will probably deal with rather obscure commands at times.
 
+This series of tips and tricks targets beginner to intermediate LaTeX users and compiles recommendations gathered along the writing of my PhD thesis.
+The following best practices are generic, but are mainly focused on the generation of scientific PDFs using the default `pdflatex` engine.
 Feel free to raise an issue or submit a pull request if you see something is missing or if you disagree with the following claims!
 
 ## Contents
