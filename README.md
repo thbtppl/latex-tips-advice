@@ -13,6 +13,7 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 ## Contents
 
 [My setup](#my-setup)
+
 [General advice](#general-advice)
 
 ## My setup
@@ -63,31 +64,31 @@ You can also declare the folders containing your external graphics, which is mor
 
 ## PDF production
 
-Editors and universities often require your PDF to be PDF/A compliant, that is 100% self-contained, with a device-independent display for long-term preservation.
+Editors and universities often require your document to be compliant with the [PDF/A standard](https://www.pdfa.org/wp-content/uploads/2013/05/PDFA_in_a_Nutshell_211.pdf), that is suitable for long-term archiving with a device-independent display.
 Among other features it must embed all fonts and include standardised metadata.
-The best way to obtain documents close to PDF/A compliance with `pdflatex` is to use the [pdfx](https://ctan.org/pkg/pdfx?lang=en) package.
-You could then include the metadata of your document by adding before `\documentclass`,
-```
-\begin{filecontents*}{\jobname.xmpdata}
-  \Author       {John Doe}
-  \Title        {My Document Title}
-  \Language     {en-GB}
-  \Keywords     {keyword1\sep keyword2\sep keyword3}
-  \Subject      {PhD thesis}
-  \Copyright    {\copyright 2021 John Doe}
-  \CopyrightURL {https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode}
-\end{filecontents*}
-```
 
-[Linux] Use the `pdffonts` utility to check whether your fonts are embedded into your generated PDF.
+* The best way to obtain LaTeX documents close to PDF/A compliance is to use the [pdfx](https://ctan.org/pkg/pdfx?lang=en) package.
 
-To validate your PDF/A compliance and get a detailed report, you can use
-- [VeraPDF](https://verapdf.org/) (free)
-- The preflight tool of [Adobe Acrobat DC Pro](https://acrobat.adobe.com/us/en/acrobat/acrobat-pro.html) (non-free but free 7-day trial)
+* You could then include the metadata of your document by adding before `\documentclass`,
+    ```
+    \begin{filecontents*}{\jobname.xmpdata}
+      \Author       {John Doe}
+      \Title        {My Document Title}
+      \Language     {en-GB}
+      \Keywords     {keyword1\sep keyword2\sep keyword3}
+      \Subject      {PhD thesis}
+      \Copyright    {\copyright 2021 John Doe}
+      \CopyrightURL {https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode}
+    \end{filecontents*}
+    ```
 
-The preflight tool can also repair non-compliant PDFs.
+* On Linux, you can use the `pdffonts` utility to check whether your fonts are embedded into your generated PDF.
 
+* To validate your PDF/A compliance and get a detailed report, you can use
+    * [VeraPDF](https://verapdf.org/) (free)
+    * The preflight tool of [Adobe Acrobat DC Pro](https://acrobat.adobe.com/us/en/acrobat/acrobat-pro.html) (non-free but free 7-day trial)
 
+* The preflight tool can also repair non-compliant PDFs produced with `pdflatex`.
 
 
 ## Typesetting
