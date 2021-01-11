@@ -12,7 +12,8 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 
 ## Contents
 
-
+[My setup](#my-setup)
+[General advice](#general-advice)
 
 ## My setup
 
@@ -58,7 +59,7 @@ You can also declare the folders containing your external graphics, which is mor
     \usepackage[all,warning]{onlyamsmath}
     ```
     in your preamble to automatically warn you when using deprecated features in terms of packages and commands, including maths.
-    It is sad many journal editors force users to use the archaic `natbib` instead of `biblatex`, for example. 
+
 
 ## PDF production
 
@@ -160,6 +161,8 @@ From that point onwards, you can add '`[!t]`' to force the float at the top, or 
 Stop saying LaTeX messes up graphs!
 
 ## Packages
+
+It is sad many journal editors force users to use the archaic `natbib` instead of `biblatex`, for example. 
 
 % --- Warn when use of obsolete/deprecated/non-amsmath commands
 % \RequirePackage[l2tabu,orthodox]{nag}
