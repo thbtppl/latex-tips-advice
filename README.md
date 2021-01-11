@@ -8,6 +8,7 @@ Since [LaTeX3 won't replace and unify LaTeX2e components](https://tex.stackexcha
 
 This series of tips and tricks targets beginner to intermediate LaTeX users and compiles recommendations gathered along the writing of my PhD thesis.
 The following best practices are generic, but are mainly focused on the generation of scientific PDFs using the default `pdflatex` engine.
+
 Feel free to raise an issue or submit a pull request if you see something is missing or if you disagree with the following claims!
 
 ## Contents
@@ -15,6 +16,8 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 [My setup](#my-setup)
 
 [General advice](#general-advice)
+
+[PDF production](#pdf-production)
 
 ## My setup
 
@@ -45,7 +48,7 @@ You can also declare the folders containing your external graphics, which is mor
 
 * In your document, separate the format/layout from the actual content:
     * Create a modular document with different files
-    * Define commands with semantically appropriate names, such as `\newcommand*{\contentstitle} {Table of Contents}`
+    * Define commands with semantically appropriate names <!--, such as `\newcommand*{\contentstitle} {Table of Contents}`-->
     * Do not put hard-coded settings within your content
 
 * Use the `import` package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled.
@@ -144,7 +147,7 @@ No point in using `chktex`.
 
 You can check your bibliography using `biber --tool --validate-datamodel references.bib`
 
-Floats (graphics and tables)
+## Floats (graphics and tables)
 
 I suggest to output your graphics in the EPS format, and to convert them to PDF using the `epstopdf` utility included in TeX distributions.
 The .pdf backend of matplotlib is not optimized, and I always observe a factor of size decrease between 10 and 100 between exporting in .eps and converting to pdf instead of saving directly in pdf.
@@ -202,18 +205,27 @@ An end of an preamble ensuring maximal compatibility looks like
 
 ## Bibliography
 
-Find the biblatex package (e.g. biblatex-chicago) closest to the style you want to use.
-Tweaking it to your needs should be straightforward as biblatex is easy to customise.
-I used the plain biblatex package and defined my Harvard style in bibliography_style.tex
+* First, you may want to use the recent `biblatex` *package* with the `biber` *backend*. Avoid using the old `natbib` package which uses the `bibtex` backend. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib).
 
-Remove the useless fields in the .bib entries
+* Find the biblatex package (e.g. `biblatex-phys`) closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customise.
 
-Never, ever trust .bib entries given by journals, editors or Zotero/Mandeley.
-They are often filled with errors or typos.
-It takes time to check individual fields, but I can't stress enough how many typos I was able to correct from a supposedly 'clean' entry.
+* Never, ever trust `.bib` entries given by journals, editors or Zotero/Mandeley. They are often filled with errors. Yes, it takes time to check individual fields, but I can't stress enough how many typos I was able to find.
 
-Use title-case and capitalise all content words for titles. In this way, you can easily switch to sentence-case using a biblatex option.
-Conversely if you forget that and the bibliography needs to be title-case, you will have add capitals manually if your biblatex style.
+* Remove the useless fields in the `.bib` entries.
+
+* The [doi2bib](https://doi2bib.org/) website is very handy.
+
+* Capitalise all content words for titles: 
+
+    ```
+    title = {On the Electrodynamics of Moving Bodies}
+    ```
+    instead of
+    
+    ````
+    title = {On the electrodynamics of moving bodies}
+    ```
+    In this way, you can easily switch from title-case to sentence-case using a `biblatex` option. Conversely if you forget that and the bibliography needs to be title-case, you will have add capitals manually if your biblatex style.
 
 Surround words that remain capitalised at all times using curly brackets:
 title = {A Numerical Study of the Temporal Eigenvalue Spectrum of the {Blasius} Boundary Layer}
