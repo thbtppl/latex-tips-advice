@@ -4,7 +4,7 @@
 
 As of 2021, LaTeX2e (LaTeX) has grown to a mature ecosystem for typesetting beautiful documents with endless design possibilities.
 However, it has a steep learning curve, and writing a large document can be sometimes daunting, especially for people without a 'coding' mindset.
-Since [LaTex3 won't replace and unify LaTeX2e components](https://tex.stackexchange.com/a/572177), you still need to load manually many individual packages and will probably deal with rather obscure commands at times.
+Since [LaTeX3 won't replace and unify LaTeX2e components](https://tex.stackexchange.com/a/572177), you still need to load manually many individual packages and will probably deal with rather obscure commands at times.
 
 This series of tips and tricks targets beginner to intermediate LaTeX users and compiles recommendations gathered along the writing of my PhD thesis.
 The following best practices are generic, but are mainly focused on the generation of scientific PDFs using the default `pdflatex` engine.
@@ -16,25 +16,16 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 
 ## My setup
 
-[TeXLive](https://www.tug.org/texlive/)
-[Visual Studio Code](https://code.visualstudio.com/) with the amazing [LaTeX workshop](https://github.com/James-Yu/LaTeX-Workshop https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) extension
-For vectorial plotting: [matplotlib](https://matplotlib.org/)
-For vectorial drawing: [Ipe](http://ipe.otfried.org/)
-LaTeX executable: `pdflatex`
+* [TeXLive](https://www.tug.org/texlive/)
+* [Visual Studio Code](https://code.visualstudio.com/) with the amazing [LaTeX workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) extension
+* [Matplotlib](https://matplotlib.org/) for 2D vector graphics 
+* [Ipe](http://ipe.otfried.org/) for vector drawing
+* LaTeX engine: `pdflatex`
 
 I recommend using `latexmk` (default in LaTeX workshop) to compile the document.
-The `latexmkrc` config file allows to declare your main source file and your desired PDF output.
-You can also state the path to your class/preamble file, and to your external graphics instead of using `\graphicspath` within the document.
-```
-@default_files = ('thesis.tex');
+The [`latexmkrc`](examples/latexmkrc) config file placed at the root of your project allows to declare your main source file, the desired PDF output and the path to your self-defined class/package/preamble files.
+You can also declare the folders containing your external graphics, which is more [memory efficient](http://www.texfaq.org/FAQ-graphicspath) than using `\graphicspath` within your `.tex` files.
 
-$pdf_mode = 1;
-
-ensure_path('TEXINPUTS', './utils//',
-            './chapters/chapter1/figures',
-            './chapters/chapter2/figures'
-            );
-```
 
 ## PDF production
 
