@@ -27,6 +27,39 @@ The [`latexmkrc`](examples/latexmkrc) config file placed at the root of your pro
 You can also declare the folders containing your external graphics, which is more [memory efficient](http://www.texfaq.org/FAQ-graphicspath) than using `\graphicspath` within your `.tex` files.
 
 
+## General advice
+
+* Use as few packages as possible and understand the preamble of your LaTeX document.
+
+* Focus on the content rather than the layout of the document, BUT do not ignore errors and warnings. The more effort you put to understand them, the more helpful it is to comprehend LaTeX's logic and the more efficient the writing process will be.
+
+* As a corollary, it is better to work continuously with a warning-free camera-ready template rather than going in panic mode 10 hours before your deadline trying to solve layout issues.
+
+* Do not follow any random advice found online. Many suggestions are plain wrong, and you're likely to use obsolete snippets of code.
+
+* Instead, have at least a quick look in the documentation of packages you're using. This will help you to use their commands as intended, and it will most likely save you hours of debugging.
+
+* Answers to your questions/issues are most likely on the [TeX FAQ](http://www.texfaq.org/) and on [TeX SE](https://tex.stackexchange.com/).
+
+* In your document, separate the format/layout from the actual content:
+    * Create a modular document with different files
+    * Define commands with semantically appropriate names, such as `\newcommand*{\contentstitle} {Table of Contents}`
+    * Do not put hard-coded settings within your content
+
+* Use the `import` package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled.
+
+* Use `git` and set up a remote repository (e.g. GitHub). Besides offering a natural back-up, you can quickly see current changes within a complex document, and see where you introduced code that produced bugs.
+
+* Use UTF-8 encoding (`\usepackage[utf8]{inputenc}`) to typeset your document using accents (ü,é) directly, and to allow spell-checkers parsing source files to correctly process such words.
+
+* Do not use obsolete packages or commands. It is sad many journal editors force users to use the archaic `natbib` instead of `biblatex`, for example. Add
+```
+\usepackage[l2tabu,orthodox]{nag}
+\usepackage[all,warning]{onlyamsmath}
+```
+in your preamble to automatically warn you when using deprecated features in terms of packages and math commands.
+
+
 ## PDF production
 
 Editors and universities often require your PDF to be PDF/A compliant, that is 100% self-contained, with a device-independent display for long-term preservation.
@@ -54,41 +87,6 @@ To validate your PDF/A compliance and get a detailed report, you can use
 The preflight tool can also repair non-compliant PDFs.
 
 
-## General advice
-
-Understand the preamble of your LaTeX document, and ensure you're in control by using as few packages as possible.
-
-Focus on the content rather than the layout of the document, BUT do not ignore errors and warnings.
-The more effort you put to understand what caused them, the more helpful it is to comprehend LaTeX's logic and the more efficient the writing process will be.
-It is better to work continuously with a warning-free camera-ready template rather than going in panic mode 10 hours before the deadline trying to solve layout issues.
-
-Do not follow random advice found on the Internet.
-The LaTeX packages are maintained by humans, and are subject to updates.
-You're likely to use obsolete or plain wrong pieces of code.
-
-Have at least a quick look in the documentation of packages you're using.
-This will help you to use their commands appropriately, and most likely save hours of debugging.
-
-Separate the format/layout and the actual content of your document:
-    Create a modular document
-    Define commands with semantically appropriate names:
-    Do not put hard coded measures/lengths in the text
-
-Use `git` and set up a remote repository.
-Besides offering a natural back-up, you'll be able to have an overview of changes within your complex document, and
-to quickly assess where issues arose.
-
-Use UTF-8 encoding (\usepackage[utf8]{inputenc}) to typeset your document using accents directly, and to allow spell-checkers parsing source files to correctly process foreign words like 'Etude' or 'Instabilitat'.
-
-Do not use obsolete packages or commands. It is sad many journal editors force users to use the archaic `natbib` instead of `biblatex`, for example. Add
-```
-\usepackage[l2tabu,orthodox]{nag}
-\usepackage[all,warning]{onlyamsmath}
-```
-in your preamble to automatically warn you when using deprecated features in terms of packages and math commands.
-
-Use the `import` package to include external files.
-It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be processed.
 
 
 ## Typesetting
