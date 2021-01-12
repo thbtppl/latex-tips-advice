@@ -18,7 +18,7 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 * [Packages](#packages)
 * [Some typesetting advice](#some-typesetting-advice)
 * [Maths](#maths)
-* [Floating objects and captions](#floating-objects-and-caption)
+* [Floating objects and captions](#floating-objects-and-captions)
 * [PDF production](#pdf-production)
 * [Bibliography](#bibliography)
 * [Other resources](#other-resources)
@@ -218,7 +218,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
 * Display equations are part of the flow of your document and you should treat them as an integral element of your paragraph. Therefore, if they end a sentence, they should end with a period. I would argue that using commas at the end of equations is more a matter of style.
 
-* To get correct horizontal alignment in such necessary cases, you can use the `\phantom` command:
+* To get correct horizontal alignment in such necessary cases, you can use the `\phantom` command to mask the character and simulate the spacing:
 
     ```
     \begin{equation}
@@ -269,19 +269,17 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
 * If you want to display a shorter version of your figure caption in the table of figures/tables, use the optional argument `[]` of `caption`.
 
-* I find it more elegant to put the symbols (legend) of your figure in the caption. This is easily done with `tikz`. However, these require a preceding `\protect` since `\caption` is a [fragile](http://www.texfaq.org/FAQ-protect) command.
+* I find it more elegant to put the symbols (legend) of your figure in the caption. This is easily done with `tikz`. However, these symbols require a preceding `\protect` since `\caption` is a [fragile](http://www.texfaq.org/FAQ-protect) command. 
 
-* Same goes for some math
-
-* An example combining the three previous points is
+* An example combining the two previous points is
 
     ```
     \newcommand*{\blackcircle}{\tikz{\node[draw=black,thick,scale=0.5,circle,fill=none] () {};}}
 
     \begin{figure}
       \includegraphics{chap_intro_diagram}
-      \caption[Eigenvalue spectrum of the swept, orthogonal Hiemenz flow after BiGlobal analysis with \(\Rey = \num{800}\) and \(\beta = \num{0.255}\) in terms of the phase velocity \(c = \omega/\beta\). The four relevant modes GH, S2, A1 and A2 are indicated. Comparison between the primitive and LPPE formulations.]{Eigenvalue spectrum of the swept, orthogonal Hiemenz flow after BiGlobal analysis with \(\Rey = \num{800}\) and \(\beta = \num{0.255}\) in terms of the phase velocity \(c = \omega/\beta\). The four relevant modes GH, S2, A1 and A2 are indicated. Comparison between the primitive (\protect\blackcircle) and LPPE (\protect\bluecross) formulations.}
-      \label{fig:chap-intro_diagram}
+      \caption[Diagram with experimental data]{Diagram with experimental data (\protect\blackcircle)}
+      \label{fig:chap-intro-diagram}
     \end{figure}
     ```
 
@@ -387,11 +385,11 @@ The pgf format is useful, but is also known to yields bloated graphics files as 
     ```
     to get correct abbreviation in your reference list.
 
-* The only acceptable separator between several authors is `and`.
+* The only acceptable separator between several authors is '`and`'.
 
 * Although many journals use the term "issue" as a subdivision in the volume, the corresponding entry for numerical values in `biblatex` is `number`, not `issue`.
 
-* The correct hyphenation for pages is an en-dash: `pages = {100--200}`, not a hyphen `-`.
+* The correct hyphenation for pages is an en-dash: `pages = {100--200}`, not a hyphen '`-`'.
 
 * If an entry has `volume = {1}`, double check whether there is an actual volume number. Some editors mistakenly add it.
 
