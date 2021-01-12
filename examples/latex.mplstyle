@@ -1,0 +1,19 @@
+text.usetex         : True
+text.latex.preamble : \usepackage{mathtools}, \usepackage{newpxtext}, \usepackage{eulervm}, \DeclareMathOperator{\Rey}{Re}
+
+lines.linewidth     : 1.5
+
+font.family         : serif
+font.size           : 12 
+
+savefig.dpi         : 300
+
+xtick.labelsize     : 9.0
+ytick.labelsize     : 9.0
+
+legend.framealpha   : 1.0
+legend.frameon      : True
+legend.edgecolor    : black
+legend.fancybox     : False
+
+axes.unicode_minus  : False

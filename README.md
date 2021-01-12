@@ -18,15 +18,17 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 * [Packages](#packages)
 * [Some typesetting advice](#some-typesetting-advice)
 * [Maths](#maths)
+* [Floating objects and captions](#floating-objects-and-caption)
 * [PDF production](#pdf-production)
 * [Bibliography](#bibliography)
+* [Other resources](#other-resources)
 
 
 ## My setup
 
 * [TeXLive](https://www.tug.org/texlive/)
 * [Visual Studio Code](https://code.visualstudio.com/) with the amazing [LaTeX workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) extension
-* [Matplotlib](https://matplotlib.org/) for 2D vector graphics 
+* [Matplotlib](https://matplotlib.org/) for 2D vector graphics
 * [Ipe](http://ipe.otfried.org/) for vector drawing
 * LaTeX engine: `pdflatex`
 
@@ -43,11 +45,11 @@ You can also declare the folders containing your external graphics, which is cle
 
 * As a corollary, it is better to work continuously with a warning-free camera-ready template rather than going in panic mode 10 hours before your deadline trying to solve layout issues.
 
-* Do not follow any random advice found online. Many suggestions are plain wrong, and you're likely to use obsolete snippets of code.
+* Do not follow any random advice found online. Many suggestions are plain wrong, and you're likely to end up with conflicting snippets of code in your document.
 
 * Instead, have at least a quick look in the documentation of packages you're using. This will help you to use their commands as intended, and it will most likely save you hours of debugging.
 
-* Answers to your questions/issues are most likely on the [TeX FAQ](http://www.texfaq.org/) and on [TeX SE](https://tex.stackexchange.com/).
+* Answers to your questions/issues can be found on the [TeX FAQ](http://www.texfaq.org/) or on [TeX SE](https://tex.stackexchange.com/).
 
 * In your document, separate the format/layout from the actual content:
     * Create a modular document with different files
@@ -178,7 +180,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 * Pay attention to correct spacing when using a period within a sentence. The `.\` and `\@` commands tell LaTeX your sentence does not end.
     * `This is a sentence w.\ a forced inter-word space.`
     * `This is done by XYZ\@. This is a new sentence.`
-    
+
     The latter case should not happen often if you use the `glossaries[-extra]` package for your abbreviations with a `\gls{xyz}` command.
 
 * Add to your preamble
@@ -189,6 +191,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     ```
     to force LaTeX to avoid widows and orphans (dangling lines at the beginning or end of a paragraph separated from the rest).
 
+
 ## Maths
 
 * Use the `mathtools` or at least the `amsmath` package.
@@ -197,7 +200,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
 * Similarly, for displayed, centered equations, use `\begin{equation} ... \end{equation}` (or `\[ ... \]`) instead of `$$ ... $$` which is again a TeX primitive and gives wrong vertical spacing.
 
-* For long, multi-line or several equations, read the section 3 of the [`amsmath` manual](http://mirrors.ctan.org/macros/latex/required/amsmath/amsldoc.pdf) to see which command is more suitable for your needs: `subequations`, `align`, `split`, `gather`... 
+* For long, multi-line or several equations, read the section 3 of the [`amsmath` manual](http://mirrors.ctan.org/macros/latex/required/amsmath/amsldoc.pdf) to see which command is more suitable for your needs: `subequations`, `align`, `split`, `gather`...
 
 * Use `\DeclareMathOperator` to define up-right operators with correct spacing. Don't use `\mathrm`. For example: `\DeclareMathOperator{\spn}{span}`.
 
@@ -227,7 +230,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     \end{equation}
     ```
 
-* Adding a small space in your integrals between the integrand and the differential is nicer:
+* Adding a small space ('`\,`') in your integrals between the integrand and the differential is nicer:
 
     ```
     \begin{equation}
@@ -254,6 +257,33 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     I estimate at least 15,000 parts in this work and probably \(10^{6}\) cells in this experiment.
     ```
     If you're writing in British English, you can activate automatically the comma separator between thousands.
+
+
+## Floating objects and captions
+
+* Many people say LaTeX is the worst for float placement. This is simply wrong. LaTeX endeavour to put it closest to your text. I would suggest to *not* add any placement specifier '`[!htbp]`' to your figures until you have the final version of the document.
+
+* From that point onwards, you can add '`[!t]`' to put the float at the top, or even 'here' if possible '`[!ht]`' if your object is placed in the wrong section. Think twice before leaving a figure in the middle of a page in terms of aesthetics.
+
+* Add `\g@addto@macro\@floatboxreset\centering` to your preamble to avoid the need to add `\centering` for each figure.
+
+* If you want to display a shorter version of your figure caption in the table of figures/tables, use the optional argument `[]` of `caption`.
+
+* I find it more elegant to put the symbols (legend) of your figure in the caption. This is easily done with `tikz`. However, these require a preceding `\protect` since `\caption` is a [fragile](http://www.texfaq.org/FAQ-protect) command.
+
+* Same goes for some math
+
+* An example combining the three previous points is
+
+    ```
+    \newcommand*{\blackcircle}{\tikz{\node[draw=black,thick,scale=0.5,circle,fill=none] () {};}}
+
+    \begin{figure}
+      \includegraphics{chap_intro_diagram}
+      \caption[Eigenvalue spectrum of the swept, orthogonal Hiemenz flow after BiGlobal analysis with \(\Rey = \num{800}\) and \(\beta = \num{0.255}\) in terms of the phase velocity \(c = \omega/\beta\). The four relevant modes GH, S2, A1 and A2 are indicated. Comparison between the primitive and LPPE formulations.]{Eigenvalue spectrum of the swept, orthogonal Hiemenz flow after BiGlobal analysis with \(\Rey = \num{800}\) and \(\beta = \num{0.255}\) in terms of the phase velocity \(c = \omega/\beta\). The four relevant modes GH, S2, A1 and A2 are indicated. Comparison between the primitive (\protect\blackcircle) and LPPE (\protect\bluecross) formulations.}
+      \label{fig:chap-intro_diagram}
+    \end{figure}
+    ```
 
 ## PDF production
 
@@ -299,23 +329,16 @@ Among other features it must embed all fonts and include standardised metadata.
 * Use the Python package `pdfx` https://pypi.org/project/pdfx/ (not to be mistaken with the [`pdfx`](https://ctan.org/pkg/pdfx?lang=en) LaTeX package) to detect broken hyperlinks in your PDF.
 
 
-## Floating objects
-
-* Many people say LaTeX is the worst for float placement. This is simply wrong.
-I would suggest using `\begin{figure}` without any placement specifier '`[!t]`' until you have the final version of the document.
-From that point onwards, you can add '`[!t]`' to force the float at the top, or even '`[!h]`' is usually good at
-Stop saying LaTeX messes up graphs!
-
-* Add `\g@addto@macro\@floatboxreset\centering` to your preamble to avoid the need to add `\centering` for each figure.
-
-## Including graphics 
+## Including graphics
 
 I suggest to output your graphics in the EPS format, and to convert them to PDF using the `epstopdf` utility included in TeX distributions.
 The .pdf backend of matplotlib is not optimized, and I always observe a factor of size decrease between 10 and 100 between exporting in .eps and converting to pdf instead of saving directly in pdf.
 Also, @wookai reports the quality of pdf is lesser than pdf.
 The pgf format is useful, but is also known to yields bloated graphics files as opposed to eps @wookai.
 
-The utility `pdfcrop` is very useful to remove the unneeded white space surrounding your figure.
+* The utility `pdfcrop` is very useful to remove the unneeded white space surrounding your figure.
+
+* With Python and Matplotlib, use that [guide](https://jwalton.info/Embed-Publication-Matplotlib-Latex/)
 
 
 ## Bibliography
@@ -330,13 +353,13 @@ The utility `pdfcrop` is very useful to remove the unneeded white space surround
 
 * The [doi2bib](https://doi2bib.org/) website is very handy.
 
-* Capitalise all content words for titles: 
+* Capitalise all content words for titles:
 
     ```
     title = {On the Electrodynamics of Moving Bodies}
     ```
     instead of
-    
+
     ```
     title = {On the electrodynamics of moving bodies}
     ```
@@ -355,9 +378,16 @@ The utility `pdfcrop` is very useful to remove the unneeded white space surround
     ```
     since it won't be subjected to style changes.
 
-* For author names, use the `author = {Last Name, First Name}` format. Using `author = {J. Doe}` is fine for simple names, but the former helps `biblatex` to clearly identify name particles and abbreviate correctly, especially for authors with prefixes like 'de' in French or 'van' in Dutch or whose last name contains two words.
+* For author names, use the `author = {LastName, FirstName}` format. Using `author = {FirstName LastName}` is fine for simple names, but the former helps `biblatex` to clearly identify name particles and abbreviate correctly, especially for authors with prefixes like 'de' in French or 'van' in Dutch or whose last name contains two words.
 
-* For long given/last names (e.g. Brazilian), you may use `author = {given=Carlos Santos de Azevedo, given-i=C S {de\nopunct} A, family=Silva}` to get correct abbreviation in your reference list.
+* For long given/last names (e.g. Brazilian), you may use
+
+    ```
+    author = {given=Carlos Santos de Azevedo, given-i=C S {de\nopunct} A, family=Silva}
+    ```
+    to get correct abbreviation in your reference list.
+
+* The only acceptable separator between several authors is `and`.
 
 * Although many journals use the term "issue" as a subdivision in the volume, the corresponding entry for numerical values in `biblatex` is `number`, not `issue`.
 
@@ -368,3 +398,5 @@ The utility `pdfcrop` is very useful to remove the unneeded white space surround
 * Use `date` instead of `year` with `biblatex` as it offers greater flexibility.
 
 * If an entry is in a different language than the main language of the document, use the `langid` field to get correct hyphenation patterns.
+
+## Other resources
