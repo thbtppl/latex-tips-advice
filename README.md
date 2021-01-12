@@ -16,11 +16,11 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 * [My setup](#my-setup)
 * [General advice](#general-advice)
 * [Packages](#packages)
-* [Correct typesetting](#correct-typesetting)
+* [Some typesetting advice](#some-typesetting-advice)
 * [Maths](#maths)
 * [PDF production](#pdf-production)
 * [Bibliography](#bibliography)
-* [Typesetting](#typesetting)
+
 
 ## My setup
 
@@ -32,7 +32,7 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 
 I recommend using `latexmk` (default in LaTeX workshop) to compile the document.
 The [`latexmkrc`](examples/latexmkrc) config file placed at the root of your project allows to declare your main source file, the desired PDF output and the path to your self-defined class/package/preamble files.
-You can also declare the folders containing your external graphics, which is cleaner and more [memory efficient](http://www.texfaq.org/FAQ-graphicspath) than using `\graphicspath` within your `.tex` files.
+You can also declare the folders containing your external graphics, which is cleaner than using `\graphicspath` within your `.tex` files.
 
 
 ## General advice
@@ -53,6 +53,8 @@ You can also declare the folders containing your external graphics, which is cle
     * Create a modular document with different files
     * Define commands with semantically appropriate names <!--, such as `\newcommand*{\contentstitle} {Table of Contents}`-->
     * Do not put hard-coded settings within your content
+
+Add point that one modification affects whole document use vec and chapterspace example
 
 * Use the `import` package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled. For example, you could have in your main file
 
@@ -83,9 +85,9 @@ You can also declare the folders containing your external graphics, which is cle
     * `import`: include external files from different folders
     * `fontenc`: font encoding
     * `ìnputenc`: input encoding
-    * `babel` (or `polyglossia` if you're using `XeLaTeX` or `LuaLaTeX`): use proper typographical rules adapted to document language
+    * `babel`: use proper typographical rules adapted to document language
     * `microtype`: automatic font spacing adjustments for improved aesthetics
-    * `mathtools`: math support with improvements to `amsmath`
+    * `mathtools`: math support with improvements to the widely used `amsmath` package
     * `biblatex`: bibliography
     * `csquotes`: in-line and display quotations consistent with the document language
     * `tocloft`: customize layout of the list of figures/tables
@@ -112,7 +114,7 @@ You can also declare the folders containing your external graphics, which is cle
 * If compatible, try to pass the general options of your project to the `\documentclass` command. They will be seen by relevant packages.
 For example, the language option in `\documentclass[UKenglish]{article}` will be seen by both `babel` and `cleveref`.
 
-* Mind the order of packages in the preamble:
+* Mind the order of packages in the preamble (the joys of LaTeX):
 
     * `inputenc` should be loaded before `fontenc`
     * If using the option [babel=true], `microtype` should be loaded after babel
@@ -126,7 +128,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     The manual of `pdfx` recommends to load it as early as possible, but since it automatically loads `hyperref` I would recommend loading it just before `hyperref`.
 
 
-## Correct typesetting
+## Some typesetting advice
 
 * Use one sentence per line in your document:
 
@@ -141,7 +143,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     ```
     On the one hand, it helps to write readable and maintainable source code. On the other hand, it leads to easier to read commits and `git diff`'s as one change in your document will correspond to one sentence only.
 
-* The only recommended way to start a new paragraph is using a line break:
+* The only correct way to start a new paragraph is using a line break:
 
     ```
     ... and the sentence ends.
@@ -167,14 +169,17 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     \label{eq1}
     \end{equation}
     ```
+    as you would get wrong vertical spacing.
 
 * To force whitespace after a user-defined commmand that produces text, add empty curly braces: `\com{}` instead of `\com`
+
+* Use '`~`'
 
 * Pay attention to correct spacing when using a period within a sentence. The `.\` and `\@` commands tell LaTeX your sentence does not end.
     * `This is a sentence w.\ a forced inter-word space.`
     * `This is done by XYZ\@. This is a new sentence.`
     
-    The latter case should not happen often if you use the `glossaries[-extra]` package for your abbreviations.
+    The latter case should not happen often if you use the `glossaries[-extra]` package for your abbreviations with a `\gls{xyz}` command.
 
 * Add to your preamble
 
@@ -186,7 +191,69 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
 ## Maths
 
+* Use the `mathtools` or at least the `amsmath` package.
 
+* Use `\(x = y + z\)` rather than `$x = y + z$` for in-line mathematics. The former is proper LaTeX syntax, whereas the latter is primitive TeX syntax and yields obscure error messages.
+
+* Similarly, for displayed, centered equations, use `\begin{equation} ... \end{equation}` (or `\[ ... \]`) instead of `$$ ... $$` which is again a TeX primitive and gives wrong vertical spacing.
+
+* For long, multi-line or several equations, read the section 3 of the [`amsmath` manual](http://mirrors.ctan.org/macros/latex/required/amsmath/amsldoc.pdf) to see which command is more suitable for your needs: `subequations`, `align`, `split`, `gather`... 
+
+* Use `\DeclareMathOperator` to define up-right operators with correct spacing. Don't use `\mathrm`. For example: `\DeclareMathOperator{\spn}{span}`.
+
+* Use `\boldsymbol` to reliably get bold math variables.
+
+* Do not use the vertical bar character '`|`'. You can get scalable vertical bars by using `\lvert` or `\rvert`.
+
+* `mathtools` provides the handy `\DeclarePairedDelimiter` command to declare scaling delimiter operators. You could do:
+
+    ```
+    \DeclarePairedDelimiter\abs{\lvert}{\rvert}    % absolute value: |x|
+    \DeclarePairedDelimiter\norm{\lVert}{\rVert}   % norm: ||x||
+    \DeclarePairedDelimiter\itor{\lbrack}{\lbrack} % right open interval: [x,y[
+    ```
+
+* Display equations are part of the flow of your document and you should treat them as an integral element of your paragraph. Therefore, if they end a sentence, they should end with a period. I would argue that using commas at the end of equations is more a matter of style.
+
+* To get correct horizontal alignment in such necessary cases, you can use the `\phantom` command:
+
+    ```
+    \begin{equation}
+      A_{i} =
+      \begin{cases}
+        1 & \text{if } i = 0\phantom{.} \\
+        2 & \text{if } i \neq 0.
+      \end{cases}
+    \end{equation}
+    ```
+
+* Adding a small space in your integrals between the integrand and the differential is nicer:
+
+    ```
+    \begin{equation}
+      I = \int_{0}^{+infty}f(x)\,dx
+    \end{equation}
+    ```
+
+* Use the `siunitx` package to get consistent display of numbers and units across your document:
+
+    ```
+    \DeclareSIUnit{\nauticalmile}{NM}
+
+    The radius of the circle is \SI{10}{\milli\metre}.
+    Pressure is usually expressed in \si{\kilogram\per\metre\per\second}.
+    It seems the ship has travelled \SI{100}{\nauticalmile}.
+    I estimate at least \num{15000} parts in this work and probably \num{e6} cells in this experiment.
+    ```
+    and not
+
+    ```
+    The radius of the circle is 10 mm.
+    Pressure is usually expressed in kg.m\textsuperscript{-1}.s\textsuperscript{-1}.
+    It seems the ship has travelled 100 NM.
+    I estimate at least 15,000 parts in this work and probably \(10^{6}\) cells in this experiment.
+    ```
+    If you're writing in British English, you can activate automatically the comma separator between thousands.
 
 ## PDF production
 
@@ -227,7 +294,7 @@ Among other features it must embed all fonts and include standardised metadata.
 
 * You can check your bibliography file using `biber --tool --validate-datamodel main.bib`.
 
-* You can detect 'hidden' Unicode characters in your files by searching the string `[^\x00-\x7f]` as a regular expression.
+* You can detect 'hidden' Unicode characters potentially messing up your files by searching the string `[^\x00-\x7f]` as a regular expression.
 
 * Use the Python package `pdfx` https://pypi.org/project/pdfx/ (not to be mistaken with the [`pdfx`](https://ctan.org/pkg/pdfx?lang=en) LaTeX package) to detect broken hyperlinks in your PDF.
 
@@ -257,7 +324,7 @@ The utility `pdfcrop` is very useful to remove the unneeded white space surround
 
 * Find the biblatex package (e.g. `biblatex-phys`) closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customize.
 
-* Never, ever trust `.bib` entries given by journals, editors or Zotero/Mandeley. They are often filled with errors. Yes, it takes time to check individual fields, but I can't stress enough how many typos I was able to find.
+* **Never ever trust** `.bib` entries given by journals, editors or Zotero/Mandeley. They are often filled with errors and do not reflect the author/title information of the publication. Yes, it takes time to check individual fields, but I can't stress enough how many typos I was able to find.
 
 * Remove the useless fields in the `.bib` entries.
 
