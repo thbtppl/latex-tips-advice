@@ -218,6 +218,8 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
 * The correct way to obtain an ellipsis `(...)` punctuation symbol is to use `\ldots`.
 
+* Use the `draft` option of `\documentclass` to highlight in black where your text or figures exceeds the margin boundary. Don't forget to load `microtype` with the `final` option if using it.
+
 * Add to your preamble
 
     ```
