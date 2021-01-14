@@ -19,6 +19,7 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 * [Some typesetting advice](#some-typesetting-advice)
 * [Maths](#maths)
 * [Floating objects and captions](#floating-objects-and-captions)
+* [Including graphics](#including-graphics)
 * [PDF production](#pdf-production)
 * [Bibliography](#bibliography)
 * [Other resources](#other-resources)
@@ -28,7 +29,7 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 
 * [TeXLive](https://www.tug.org/texlive/)
 * [Visual Studio Code](https://code.visualstudio.com/) with the amazing [LaTeX workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) extension
-* [Matplotlib](https://matplotlib.org/) for 2D vector graphics
+* [Matplotlib](https://matplotlib.org/) for data-driven vector graphics
 * [Ipe](http://ipe.otfried.org/) for vector drawing
 * LaTeX engine: `pdflatex`
 
@@ -79,6 +80,7 @@ Add point that one modification affects whole document use vec and chapterspace 
     ```
     in your preamble to automatically warn you when using deprecated features in terms of packages and commands, including maths.
 
+*
 
 ## Packages
 
@@ -216,7 +218,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     \DeclarePairedDelimiter\itor{\lbrack}{\lbrack} % right open interval: [x,y[
     ```
 
-* Display equations are part of the flow of your document and you should treat them as an integral element of your paragraph. Therefore, if they end a sentence, they should end with a period. I would argue that using commas at the end of equations is more a matter of style.
+* Display equations are part of the flow of your document and you should treat them as an integral element of your paragraph. Therefore, if they end a sentence, they should end with a period. I would argue that using commas at the end of equations is more a matter of style, and could clutter your document.
 
 * To get correct horizontal alignment in such necessary cases, you can use the `\phantom` command to mask the character and simulate the spacing:
 
@@ -258,22 +260,38 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     ```
     If you're writing in British English, you can activate automatically the comma separator between thousands.
 
+* If you're missing vertical space between multiple equations, you can adjust it as follows:
+
+    ```
+    \newcommand*{\mymathspace}{0.30\baselineskip}
+
+    \begin{subequations}
+      \begin{align}
+        f_{1}(x) = g(x) - h(x)\\[\mymathspace]
+        f_{2}(x) = g(x) + h(x)
+      \end{align}
+    \end{subequations}
+    ```
 
 ## Floating objects and captions
 
-* Many people say LaTeX is the worst for float placement. This is simply wrong. LaTeX endeavour to put it closest to your text. I would suggest to *not* add any placement specifier '`[!htbp]`' to your figures until you have the final version of the document.
+Many people say LaTeX is the worst for float placement. This is simply wrong. By default, LaTeX endeavours to put it closest to the surrounding text in the source file, at the top or on its own page if deemed appropriate.
 
-* From that point onwards, you can add '`[!t]`' to put the float at the top, or even 'here' if possible '`[!ht]`' if your object is placed in the wrong section. Think twice before leaving a figure in the middle of a page in terms of aesthetics.
+* I would suggest to *not* add any placement specifier '`[!htbp]`' to your figures until you have the final version of the document.
+
+* From that point onwards, you can add '`[!t]`' to put the float at the top, or even 'here if possible and at the top otherwise' ('`[!ht]`') if your object is placed in the wrong section. Think twice before leaving a figure in the middle of a page in terms of aesthetics.
 
 * Add `\g@addto@macro\@floatboxreset\centering` to your preamble to avoid the need to add `\centering` for each figure.
 
 * If you want to display a shorter version of your figure caption in the table of figures/tables, use the optional argument `[]` of `caption`.
 
-* I find it more elegant to put the symbols (legend) of your figure in the caption. This is easily done with `tikz`. However, these symbols require a preceding `\protect` since `\caption` is a [fragile](http://www.texfaq.org/FAQ-protect) command. 
+* I find it more elegant to put the symbols (legend) of your figure in the caption. This is easily done with `tikz`. However, these symbols require a preceding `\protect` since `\caption` is a [fragile](http://www.texfaq.org/FAQ-protect) command.
 
 * An example combining the two previous points is
 
     ```
+    \usepackage{tikz}
+
     \newcommand*{\blackcircle}{\tikz{\node[draw=black,thick,scale=0.5,circle,fill=none] () {};}}
 
     \begin{figure}
@@ -283,33 +301,43 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     \end{figure}
     ```
 
-## PDF production
 
-Editors and universities often require your document to be compliant with the [PDF/A standard](https://www.pdfa.org/wp-content/uploads/2013/05/PDFA_in_a_Nutshell_211.pdf), that is suitable for long-term archiving with a device-independent display.
-Among other features it must embed all fonts and include standardised metadata.
+## Including graphics
 
-* The best way to obtain LaTeX documents close to PDF/A compliance is to use the [pdfx](https://ctan.org/pkg/pdfx?lang=en) package.
+* Use one script per figure and put a comment in your LaTeX document that gives the command used to create the figure and its path. This is an efficient way of working as you'll most likely need to adjust or recreate your graphics.
 
-* You could then include the metadata of your document by adding before `\documentclass`,
-    ```
-    \begin{filecontents*}{\jobname.xmpdata}
-      \Author       {John Doe}
-      \Title        {My Document Title}
-      \Language     {en-GB}
-      \Keywords     {keyword1\sep keyword2\sep keyword3}
-      \Subject      {PhD thesis}
-      \Copyright    {\copyright 2021 John Doe}
-      \CopyrightURL {https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode}
-    \end{filecontents*}
-    ```
+* With Matplotlib, I suggest to output graphics in the EPS format. Then, use the `epstopdf` utility included in most TeX distributions to convert them to PDF.
 
-* On Linux, you can use the `pdffonts` utility to check whether your fonts are embedded into your generated PDF.
+* Finally, use the `pdfcrop` utility to remove the unneeded white space surrounding your figure. Using `bbox_inches = 'tight'` in the `savefig` function of Matplotlib is not enough.
 
-* To validate your PDF/A compliance and get a detailed report, you can use
-    * [VeraPDF](https://verapdf.org/) (free)
-    * The preflight tool of [Adobe Acrobat DC Pro](https://acrobat.adobe.com/us/en/acrobat/acrobat-pro.html) (non-free but free 7-day trial)
+* The reason is that the PDF backend of Matplotlib is not optimized. I always observe a O(10) or a O(100) factor of size decrease between exporting in EPS and converting to PDF instead of saving directly in PDF.
 
-* The preflight tool can also repair non-compliant PDFs produced with `pdflatex`.
+* Ensure your Matplotlib figure layout and fonts match that of your LaTeX document. I recommand using a [style sheet](https://matplotlib.org/3.3.3/gallery/style_sheets/style_sheets_reference.html) where you can replicate your LaTeX preamble and globally define your plot settings.
+
+* Your [style sheet](./examples/latex.mplstyle) should be put in `MPLCONFIGDIR/stylelib`. On Mac OS, `MPLCONFIGDIR` is usually `~/.matplotlib`. On Linux, `MPLCONFIGDIR` is usually `~/.config/matplotlib`. You can get the value of `MPLCONFIGDIR` by calling the Matplotlib function `get_configdir()` in Python. Then in your figure script, add the line `matplotlib.pyplot.style.use('thesis')` to use your style sheet. You could then create a style sheet for your thesis, for your articles and reports and quickly jump from one to another.
+
+* Directly plot your graphics at the correct, final size to ensure consistent fonts with your LaTeX document. I found that the `set_size` function in the [J. Walton's guide](https://jwalton.info/Embed-Publication-Matplotlib-Latex/) does the job perfectly. Determine your LaTeX document text width using `\showthe\textwidth` or by checking the log file. Then you need to decide which portion of the width your figure should take. Eventually, just include the figure in LaTeX, and do *not* adjust nor distort its size with `[width=0.5\textwidth]` or `[scale=0.3]`.
+
+* Use the same colors in matplotlib and LaTeX. I like to use HTML color codes in Matplotlib (`MyRed= '#cc0000'`) and in LaTeX thanks to the `xcolor` package: `\definecolor{MyRed}{HTML}{cc0000}`.
+
+* Do not add the figure extension in `\includegraphics`.
+
+A combination of these recommendations in your LaTeX source looks like
+
+```
+% python3 ${HOME}/paper1/plots/plot_variable.py
+\begin{figure}
+  \includegraphics{chap_results_variable}
+  \caption{My results}
+  \label{fig:chap-results_variable}
+\end{figure}
+```
+
+\the\textwidth
+
+* The
+
+* With Python and Matplotlib, use that
 
 
 ## Syntax and spell-check
@@ -324,19 +352,7 @@ Among other features it must embed all fonts and include standardised metadata.
 
 * You can detect 'hidden' Unicode characters potentially messing up your files by searching the string `[^\x00-\x7f]` as a regular expression.
 
-* Use the Python package `pdfx` https://pypi.org/project/pdfx/ (not to be mistaken with the [`pdfx`](https://ctan.org/pkg/pdfx?lang=en) LaTeX package) to detect broken hyperlinks in your PDF.
-
-
-## Including graphics
-
-I suggest to output your graphics in the EPS format, and to convert them to PDF using the `epstopdf` utility included in TeX distributions.
-The .pdf backend of matplotlib is not optimized, and I always observe a factor of size decrease between 10 and 100 between exporting in .eps and converting to pdf instead of saving directly in pdf.
-Also, @wookai reports the quality of pdf is lesser than pdf.
-The pgf format is useful, but is also known to yields bloated graphics files as opposed to eps @wookai.
-
-* The utility `pdfcrop` is very useful to remove the unneeded white space surrounding your figure.
-
-* With Python and Matplotlib, use that [guide](https://jwalton.info/Embed-Publication-Matplotlib-Latex/)
+* Use the Python package [`pdfx`](https://pypi.org/project/pdfx/) (not to be mistaken with the [`pdfx`](https://ctan.org/pkg/pdfx?lang=en) LaTeX package) to detect broken hyperlinks in your PDF.
 
 
 ## Bibliography
@@ -397,4 +413,38 @@ The pgf format is useful, but is also known to yields bloated graphics files as 
 
 * If an entry is in a different language than the main language of the document, use the `langid` field to get correct hyphenation patterns.
 
+
+## PDF production
+
+Editors and universities often require your document to be compliant with the [PDF/A standard](https://www.pdfa.org/wp-content/uploads/2013/05/PDFA_in_a_Nutshell_211.pdf), that is suitable for long-term archiving with a device-independent display.
+Among other features it must embed all fonts and include standardised metadata.
+
+* The best way to obtain LaTeX documents close to PDF/A compliance is to use the [pdfx](https://ctan.org/pkg/pdfx?lang=en) package.
+
+* You could then include the metadata of your document by adding before `\documentclass`,
+    ```
+    \begin{filecontents*}{\jobname.xmpdata}
+      \Author       {John Doe}
+      \Title        {My Document Title}
+      \Language     {en-GB}
+      \Keywords     {keyword1\sep keyword2\sep keyword3}
+      \Subject      {PhD thesis}
+      \Copyright    {\copyright 2021 John Doe}
+      \CopyrightURL {https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode}
+    \end{filecontents*}
+    ```
+
+* On Linux, you can use the `pdffonts` utility to check whether your fonts are embedded into your generated PDF.
+
+* To validate your PDF/A compliance and get a detailed report, you can use
+    * [VeraPDF](https://verapdf.org/) (free)
+    * The preflight tool of [Adobe Acrobat DC Pro](https://acrobat.adobe.com/us/en/acrobat/acrobat-pro.html) (non-free but free 7-day trial)
+
+* The preflight tool can also repair non-compliant PDFs produced with `pdflatex`.
+
+
 ## Other resources
+
+* [An essential guide to LaTex2e usage](http://mirrors.ctan.org/info/l2tabu/english/l2tabuen.pdf)
+* [Chicago Manual of Style](https://www.chicagomanualofstyle.org/)
+
