@@ -11,6 +11,7 @@ The following best practices are generic, but are mainly focused on the generati
 
 Feel free to raise an issue or submit a pull request if you see something is missing or if you disagree with the following claims!
 
+
 ## Contents
 
 * [My setup](#my-setup)
@@ -20,8 +21,9 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 * [Maths](#maths)
 * [Floating objects and captions](#floating-objects-and-captions)
 * [Including graphics](#including-graphics)
-* [PDF production](#pdf-production)
+* [Syntax and spell check](#syntax-and-spell-check)
 * [Bibliography](#bibliography)
+* [PDF production](#pdf-production)
 * [Other resources](#other-resources)
 
 
@@ -50,13 +52,14 @@ You can also declare the folders containing your external graphics, which is cle
 
 * Instead, have at least a quick look in the documentation of packages you're using. This will help you to use their commands as intended, and it will most likely save you hours of debugging.
 
-* Answers to your questions/issues can be found on the [TeX FAQ](http://www.texfaq.org/) or on [TeX SE](https://tex.stackexchange.com/).
+* Answers to your other questions/issues can be found on the [TeX FAQ](http://www.texfaq.org/) or on [TeX SE](https://tex.stackexchange.com/).
 
 * In your document, separate the format/layout from the actual content:
-    * Create a modular document with different files
+    * Create a modular document with different folders and files
     * Define commands with semantically appropriate names <!--, such as `\newcommand*{\contentstitle} {Table of Contents}`-->
     * Do not put hard-coded settings within your content
 
+    For example,
 Add point that one modification affects whole document use vec and chapterspace example
 
 * Use the `import` package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled. For example, you could have in your main file
@@ -192,6 +195,10 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     ```
     to force LaTeX to avoid widows and orphans (dangling lines at the beginning or end of a paragraph separated from the rest).
 
+* If you use 'exotic' words for LaTeX, it doesn't know how to hyphenate them, potentially leading to [overfull boxes warnings](https://tex.stackexchange.com/a/34727). Use '`\hyphenation{Chi-ches-ter}`' in your preamble to manually declare hyphenation patterns.
+
+* Also, LaTeX doesn't hyphenate words that are already hyphenated. In necessary cases you need to add '`\-`' in-text to force hyphenation, such as '`This is a three-dimen\-sional phenomenon.`'.
+
 
 ## Maths
 
@@ -202,6 +209,8 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 * Similarly, for displayed, centered equations, use `\begin{equation} ... \end{equation}` (or `\[ ... \]`) instead of `$$ ... $$` which is again a TeX primitive and gives wrong vertical spacing.
 
 * For long, multi-line or several equations, read the section 3 of the [`amsmath` manual](http://mirrors.ctan.org/macros/latex/required/amsmath/amsldoc.pdf) to see which command is more suitable for your needs: `subequations`, `align`, `split`, `gather`...
+
+* [Need a symbol for which you can't find the command?](http://detexify.kirelabs.org/classify.html)
 
 * Use `\DeclareMathOperator` to define up-right operators with correct spacing. Don't use `\mathrm`. For example: `\DeclareMathOperator{\spn}{span}`.
 
@@ -274,7 +283,9 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
 ## Floating objects and captions
 
-Many people say LaTeX is the worst for float placement. This is simply wrong. By default, LaTeX endeavours to put it closest to the surrounding text in the source file, at the top or on its own page if deemed appropriate.
+Many people say LaTeX is the worst for float (figures, tables) placement. This is simply wrong. By default, LaTeX endeavours to put it closest to the surrounding text in the source file, at the top or on its own page if deemed appropriate.
+
+* Put the floating object just before the first in-text reference.
 
 * I would suggest to *not* add any placement specifier '`[!htbp]`' to your figures until you have the final version of the document.
 
@@ -300,6 +311,44 @@ Many people say LaTeX is the worst for float placement. This is simply wrong. By
     \end{figure}
     ```
 
+## Cross-referencing
+
+* For a multi-part or multi-chapter project, do not number or use labels with numbers (chap1, chap2, ...) as it will cause complications if swapping them. Use a short key instead (chap-intro, chap-method, ...).
+
+* Add systematically a `\label` for every part, chapter, section, subsection, appendix, equation, figure or table and adopt a consistent syntax. To find my way around, I like to use the chapter location in every label:
+
+    ```
+    \label{chap:intro}
+    \label{chap:result}
+    \label{sec:chap-intro-problem-statement}
+    \label{eq:chap-intro-myeq}
+    \label{fig:chap-intro-sketch}
+    \label{tab:chap-result-mydata}
+    ```
+
+* I also find it convenient to use a label (with dashes) matching the filenames of the figure itself and the generating script. See the example in the next section.
+
+* Use [`cleveref`](http://mirrors.ctan.org/macros/latex/contrib/cleveref/cleveref.pdf) to guarantee typographically correct and consistent names for what you're referencing across your document. Instead of writing
+
+    ```
+    We discussed this in Chap.~\ref{chap:intro}.
+    Equation~\ref{eq:chap-intro-myeq} is very important, as shown in Fig.~\ref{fig:chap-intro-sketch}.
+    ```
+    just use
+
+    ```
+    We discussed this in \cref{chap:intro}.
+    \Cref{eq:chap-intro-myeq} is very important, as shown in \cref{fig:chap-intro-sketch}.
+    ```
+    If you only need the label in the text, use `\labelcref`: `... described by the Maxwell equations \labelcref{eq:chap-intro-maxwell}.`
+
+* Adopt a consistent key system for your bibliography entries, with a letter prefix to disambiguate works in a same year for one author:
+
+    ```
+    @article{johnson2000, ...
+    @article{smith2020a, ...
+    @article{smith2020b, ...
+    ```
 
 ## Including graphics
 
@@ -311,11 +360,11 @@ Many people say LaTeX is the worst for float placement. This is simply wrong. By
 
 * The reason is that the PDF backend of Matplotlib is not optimized. I always observe a O(10) or a O(100) factor of size decrease between exporting in EPS and converting to PDF instead of saving directly in PDF.
 
-* If you have many data points and plot it (with e.g. `plot`, `scatter` or a `pcolormesh`) the vector format is not appropriate and will lead to bloated, slowly-loading files. Use the `rasterized = True` keyword to alleviate that issue. Note that you need a DPI high enough to ensure quality, and you'll have to save the figure directly in PDF.
+* If you have many data points and plot it (with e.g. `plot`, `scatter` or a `pcolormesh`) the vector format is not appropriate and will lead to bloated, slowly-loading files. Use the `rasterized = True` keyword to alleviate that issue and rasterize the large dataset, while maintaining vector graphics elsewhere. Note that you need a DPI high enough to ensure quality, and you'll have to save the figure directly in PDF.
 
 * Ensure your Matplotlib figure layout and fonts match that of your LaTeX document. I recommand using a [style sheet](https://matplotlib.org/3.3.3/gallery/style_sheets/style_sheets_reference.html) where you can replicate your LaTeX preamble and globally define your plot settings.
 
-* Your [style sheet](./examples/latex.mplstyle) should be put in `MPLCONFIGDIR/stylelib`. On Mac OS, `MPLCONFIGDIR` is usually `~/.matplotlib`. On Linux, `MPLCONFIGDIR` is usually `~/.config/matplotlib`. You can get the value of `MPLCONFIGDIR` by calling the Matplotlib function `get_configdir()` in Python. Then in your figure script, add the line `matplotlib.pyplot.style.use('thesis')` to use your style sheet. You could then create a style sheet for your thesis, for your articles and reports and quickly jump from one to another.
+* Your [style sheet](./examples/latex.mplstyle) should be put in `MPLCONFIGDIR/stylelib`. On macOS, `MPLCONFIGDIR` is usually `~/.matplotlib`. On Linux, `MPLCONFIGDIR` is usually `~/.config/matplotlib`. You can get the value of `MPLCONFIGDIR` by calling the Matplotlib function `get_configdir()` in Python. Then in your figure script, add the line `matplotlib.pyplot.style.use('thesis')` to use your style sheet. You could then create a style sheet for your thesis, for your articles and reports and quickly jump from one to another.
 
 * Directly plot your graphics at the correct, final size to ensure consistent fonts with your LaTeX document. I found that the `set_size` function in the [J. Walton's guide](https://jwalton.info/Embed-Publication-Matplotlib-Latex/) does the job perfectly. Determine your LaTeX document text width using `\showthe\textwidth` or by checking the log file. Then you need to decide which portion of the width your figure should take. Eventually, just include the figure in LaTeX, and do *not* adjust nor distort its size with `[width=XXX\textwidth]` or `[scale=XXX]`.
 
@@ -326,11 +375,11 @@ Many people say LaTeX is the worst for float placement. This is simply wrong. By
 In your LaTeX source files, including figures should look like
 
 ```
-% python3 ${HOME}/paper1/plots/plot_variable.py
+% python3 ${HOME}/paper1/plots/chap_results_variable.py
 \begin{figure}
   \includegraphics{chap_results_variable}
   \caption{My results}
-  \label{fig:chap-results_variable}
+  \label{fig:chap-results-variable}
 \end{figure}
 ```
 
@@ -354,7 +403,7 @@ In your LaTeX source files, including figures should look like
 
 * First, you may want to use the recent `biblatex` *package* with the `biber` *backend* which handles accentuated letters seamlessly. Avoid using the old `natbib` *package* which uses the `bibtex` *backend*. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib).
 
-* Find the biblatex package (e.g. `biblatex-phys`) closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customize.
+* Find the biblatex package (e.g. `biblatex-phys`) or style (e.g. the option '`[style=apa]`' ) closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customize.
 
 * **Never ever trust** `.bib` entries given by journals, editors or Zotero/Mandeley. They are often filled with errors and do not reflect the author/title information of the publication. Yes, it takes time to check individual fields, but I can't stress enough how many typos I was able to find.
 
@@ -440,5 +489,6 @@ Among other features it must embed all fonts and include standardised metadata.
 
 ## Other resources
 
-* [An essential guide to LaTex2e usage](http://mirrors.ctan.org/info/l2tabu/english/l2tabuen.pdf)
 * [Chicago Manual of Style](https://www.chicagomanualofstyle.org/)
+* [An essential guide to LaTex2e usage](http://mirrors.ctan.org/info/l2tabu/english/l2tabuen.pdf)
+* [Do not use these LaTeX commands](https://profajroberts.github.io/LaTeX/ltxbanned.html)
