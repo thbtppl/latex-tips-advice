@@ -60,11 +60,11 @@ You can also declare the folders containing your external graphics, which is cle
     * Do not put hard-coded settings/values within your content (e.g. \vspace{10cm})
     * Instead, define commands with semantically appropriate names for your settings, lengths, maths, colors...
 
-* By defining global commands, your source files are more readable and you ensure a consistent display of your document. Furthermor, only one line shall be changed if you wish to adjust the setting, instead of manually correcting each occurence. For example, you can define a bold matrix in math mode following `\newcommand*{\mat}[1]{\boldsymbol{#1}}` and can quickly changed to a double-bar notation everywhere using `\newcommand*{\mat}[1]{\overline{\overline{#}}}`.
+* By defining global commands, your source files are more readable, and you ensure a consistent display of your document. Furthermore, only one line shall be changed if you wish to adjust the setting, instead of manually correcting each occurrence. For example, you can define a bold matrix in math mode following `\newcommand*{\mat}[1]{\boldsymbol{#1}}` and can be quickly changed to a double-bar notation everywhere using `\newcommand*{\mat}[1]{\overline{\overline{#}}}`.
 
-* Use `\newcommand*` and `\renewcommand*` instead of the non-starred variants as a good practice. The [starred](https://tex.stackexchange.com/questions/1050/whats-the-difference-between-newcommand-and-newcommand) variants ensure you're defining a `short` command whose arguments cannot contain a line break or a new paragraph. If using a way longer argument you should probably think about [defining a new environment](https://www.overleaf.com/learn/latex/Environments#Defining_environments_with_parameters)
+* Use `\newcommand*` and `\renewcommand*` instead of the non-starred variants as a good practice. The [starred](https://tex.stackexchange.com/questions/1050/whats-the-difference-between-newcommand-and-newcommand) variants ensure you're defining a `short` command whose arguments cannot contain a line break or a new paragraph. If using a much longer argument, you should probably think about [defining a new environment](https://www.overleaf.com/learn/latex/Environments#Defining_environments_with_parameters).
 
-* Use the `import` package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled. For example, you could have in your main file
+* Use the `import` package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled. For example, you could have in your main file:
 
     ```
     \import{./}{titlepage.tex}
@@ -76,7 +76,7 @@ You can also declare the folders containing your external graphics, which is cle
 
 * Use `git` and set up a remote repository (e.g. GitHub). Besides offering a natural back-up, you can quickly see current changes within a complex document, and see where you introduced code that produced bugs.
 
-* Use UTF-8 encoding (`\usepackage[utf8]{inputenc}`) to typeset your document using accents (ü,é) directly, and to allow spell-checkers parsing source files to correctly process such words.
+* Use UTF-8 encoding (`\usepackage[utf8]{inputenc}`) to typeset your document using accents (ü, é) directly, and to allow spell-checkers parsing source files to correctly process such words.
 
 * Do not use obsolete packages or commands. Add
     ```
@@ -144,7 +144,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     * `bookmark` should be loaded after `cleveref`
     * `glossaries[-extra]` should be loaded last
 
-    The manual of `pdfx` recommends to load it as early as possible, but since it automatically loads `hyperref` I would recommend loading it just before `hyperref`.
+    The manual of `pdfx` recommends loading it as early as possible, but since it automatically loads `hyperref` I would recommend loading it just before `hyperref`.
 
 
 ## Some typesetting advice
@@ -169,7 +169,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
     This is a new paragraph.
     ```
-    Never use '`\par`' or '`\\`'. Note this impacts on how you obtain correct vertical spacing when developing your ideas in the text. For example, you should write
+    Never use '`\par`' or '`\\`'. Note this impacts on how you obtain correct vertical spacing when developing your ideas in the text. For example, you should write:
 
     ```
     described in \cref{eq1},
@@ -190,7 +190,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     ```
     as you would get wrong vertical spacing.
 
-* To force whitespace after a user-defined commmand that produces text, add empty curly braces: `\com{}` instead of `\com`.
+* To force whitespace after a user-defined command that produces text, add empty curly braces: `\com{}` instead of `\com`.
 
 * Use '`~`' to indicate a non-breaking space and prevent LaTeX from inserting a line break at this location. Examples include
     * (if you're not using `cleveref`) in references to named parts: `Chapter~1`, `Appendix~A`
@@ -214,7 +214,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     * `This is a sentence w.\ a forced inter-word space.`
     * `This is done by XYZ\@. This is a new sentence.`
 
-    The latter case should not happen often if you use the `glossaries[-extra]` package for your abbreviations with a `\gls{xyz}` command.
+    The latter case should not often happen if you use the `glossaries[-extra]` package for your abbreviations with a `\gls{xyz}` command.
 
 * The correct way to obtain an ellipsis `(...)` punctuation symbol is to use `\ldots`.
 
@@ -257,7 +257,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     \DeclarePairedDelimiter\itor{\lbrack}{\lbrack} % right open interval: [x,y[
     ```
 
-* Display equations are part of the flow of your document and you should treat them as an integral element of your paragraph. Therefore, if they end a sentence, they should end with a period. I would argue that using commas at the end of equations is more a matter of style, and could clutter your document.
+* Display equations are part of the flow of your document, and you should treat them as an integral element of your paragraph. Therefore, if they end a sentence, they should end with a period. I would argue that using commas at the end of equations is more a matter of style, and could clutter your document.
 
 * To get correct horizontal alignment in such necessary cases, you can use the `\phantom` command to mask the character and simulate the spacing:
 
@@ -314,7 +314,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
 ## Floating objects and captions
 
-Many people say LaTeX is the worst for float (figures, tables) placement. This is simply wrong. By default, LaTeX endeavours to put it closest to the surrounding text in the source file, at the top or on its own page if deemed appropriate.
+Many people say LaTeX is the worst for float (figures, tables) placement. This is simply wrong. By default, LaTeX endeavors to put it closest to the surrounding text in the source file, at the top or on its own page if deemed appropriate.
 
 * Put the floating object just before the first in-text reference.
 
@@ -359,7 +359,7 @@ Many people say LaTeX is the worst for float (figures, tables) placement. This i
 
 * I also find it convenient to use a label (with dashes) matching the filenames of the figure itself and the generating script. See the example in the next section.
 
-* Use [`cleveref`](http://mirrors.ctan.org/macros/latex/contrib/cleveref/cleveref.pdf) to guarantee typographically correct and consistent names for what you're referencing across your document. Instead of writing
+* Use [`cleveref`](http://mirrors.ctan.org/macros/latex/contrib/cleveref/cleveref.pdf) to guarantee typographically correct and consistent names for what you're referencing across your document. Instead of writing:
 
     ```
     We discussed this in Chap.~\ref{chap:intro}.
@@ -438,7 +438,7 @@ In your LaTeX source files, including figures should look like
 
 * First, you may want to use the recent `biblatex` *package* with the `biber` *backend* which handles accentuated letters seamlessly. Avoid using the archaic `natbib` *package* which uses the `bibtex` *backend*. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib).
 
-* Find the biblatex package (e.g. `biblatex-phys`) or style (e.g. the option '`[style=apa]`' ) closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customize.
+* Find the biblatex package (e.g. `biblatex-phys`) or style (e.g. the option '`[style=apa]`') closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customize.
 
 * **Never ever trust** `.bib` entries given by journals, editors or Zotero/Mandeley. They are often filled with errors and do not reflect the author/title information of the publication. Yes, it takes time to check individual fields, but I can't stress enough how many typos I was able to find.
 
@@ -446,7 +446,7 @@ In your LaTeX source files, including figures should look like
 
 * The [doi2bib](https://doi2bib.org/) website is very handy to provide the `.bib` entry using the DOI.
 
-* Capitalise all content words for titles:
+* Capitalize all content words for titles:
 
     ```
     title = {On the Electrodynamics of Moving Bodies}
@@ -456,9 +456,9 @@ In your LaTeX source files, including figures should look like
     ```
     title = {On the electrodynamics of moving bodies}
     ```
-    In this way, you can easily switch from title-case to sentence-case using a `biblatex` option. Conversely if you forget that and the bibliography needs to be title-case, you will have to add all missing capitals manually.
+    In this way, you can easily switch from title-case to sentence-case using a `biblatex` option. Conversely, if you forget that and the bibliography needs to be title-case, you will have to add all missing capitals manually.
 
-* Surround words that remain capitalised at all times using curly brackets:
+* Surround words that remain capitalized at all times using curly brackets:
 
     ```
     title = {Protein Measurement with the {Folin} Phenol Reagent}
@@ -482,7 +482,7 @@ In your LaTeX source files, including figures should look like
 
 * The only acceptable separator between several authors is '`and`'.
 
-* Although many journals use the term "issue" as a subdivision in the volume, the corresponding entry for numerical values in `biblatex` is `number`, not `issue`.
+* Although many journals use the term 'issue' as a subdivision in the volume, the corresponding entry for numerical values in `biblatex` is `number`, not `issue`.
 
 * The correct hyphenation for pages is an en-dash: `pages = {100--200}`, not a hyphen '`-`'.
 
@@ -496,7 +496,7 @@ In your LaTeX source files, including figures should look like
 ## PDF production
 
 Editors and universities often require your document to be compliant with the [PDF/A standard](https://www.pdfa.org/wp-content/uploads/2013/05/PDFA_in_a_Nutshell_211.pdf), that is suitable for long-term archiving with a device-independent display.
-Among other features it must embed all fonts and include standardised metadata.
+Among other features it must embed all fonts and include standardized metadata.
 
 * The best way to obtain LaTeX documents close to PDF/A compliance is to use the [pdfx](https://ctan.org/pkg/pdfx?lang=en) package.
 
