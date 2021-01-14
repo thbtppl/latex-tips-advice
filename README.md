@@ -8,6 +8,7 @@ Since [LaTeX3 won't replace and unify LaTeX2e components](https://tex.stackexcha
 
 This series of tips and tricks targets beginner to intermediate LaTeX users and compiles recommendations gathered along the writing of my PhD thesis.
 The following best practices are generic, but are mainly focused on the generation of scientific PDFs using the default `pdflatex` engine.
+You can see in action what is listed here in the [PhD thesis template](https://github.com/thbtppl/latex-thesis-imperial) I shared.
 
 Feel free to raise an issue or submit a pull request if you see something is missing or if you disagree with the following claims!
 
@@ -56,11 +57,12 @@ You can also declare the folders containing your external graphics, which is cle
 
 * In your document, separate the format/layout from the actual content:
     * Create a modular document with different folders and files
-    * Define commands with semantically appropriate names <!--, such as `\newcommand*{\contentstitle} {Table of Contents}`-->
-    * Do not put hard-coded settings within your content
+    * Do not put hard-coded settings/values within your content (e.g. \vspace{10cm})
+    * Instead, define commands with semantically appropriate names for your settings, lengths, maths, colors...
 
-    For example,
-Add point that one modification affects whole document use vec and chapterspace example
+* By defining global commands, your source files are more readable and you ensure a consistent display of your document. Furthermor, only one line shall be changed if you wish to adjust the setting, instead of manually correcting each occurence. For example, you can define a bold matrix in math mode following `\newcommand*{\mat}[1]{\boldsymbol{#1}}` and can quickly changed to a double-bar notation everywhere using `\newcommand*{\mat}[1]{\overline{\overline{#}}}`.
+
+* Use `\newcommand*` and `\renewcommand*` instead of the non-starred variants as a good practice. The [starred](https://tex.stackexchange.com/questions/1050/whats-the-difference-between-newcommand-and-newcommand) variants ensure you're defining a `short` command whose arguments cannot contain a line break or a new paragraph. If using a way longer argument you should probably think about [defining a new environment](https://www.overleaf.com/learn/latex/Environments#Defining_environments_with_parameters)
 
 * Use the `import` package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled. For example, you could have in your main file
 
@@ -83,6 +85,17 @@ Add point that one modification affects whole document use vec and chapterspace 
     ```
     in your preamble to automatically warn you when using deprecated features in terms of packages and commands, including maths.
 
+* Using the [`microtype`](https://ctan.org/pkg/microtype?lang=en) package will always improve the aesthetics of your document, even with the default settings. However, do not forget to disable character protrusion in listed environments such as the table of contents:
+
+    ```
+    \microtypesetup{protrusion=false}
+
+    \tableofcontents
+    \listoffigures
+    \listoftables
+
+    \microtypesetup{protrusion=true}
+    ```
 
 ## Packages
 
@@ -147,7 +160,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     ```
     This is a sentence. Followed by another sentence.
     ```
-    On the one hand, it helps to write readable and maintainable source code. On the other hand, it leads to easier to read commits and `git diff`'s as one change in your document will correspond to one sentence only.
+    On the one hand, it helps to write readable and maintainable source code. On the other hand, it leads to easier to read commits and `git diff`'s as one change in your document will correspond to one sentence only. Do not hesitate to break long lines, as the sentence will continue.
 
 * The only correct way to start a new paragraph is using a line break:
 
@@ -156,7 +169,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
     This is a new paragraph.
     ```
-    Never use `\par` or `\\`. Note this impacts on how you obtain correct vertical spacing when developing your ideas in the text. For example, you should write
+    Never use '`\par`' or '`\\`'. Note this impacts on how you obtain correct vertical spacing when developing your ideas in the text. For example, you should write
 
     ```
     described in \cref{eq1},
@@ -177,15 +190,33 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     ```
     as you would get wrong vertical spacing.
 
-* To force whitespace after a user-defined commmand that produces text, add empty curly braces: `\com{}` instead of `\com`
+* To force whitespace after a user-defined commmand that produces text, add empty curly braces: `\com{}` instead of `\com`.
 
-* Use '`~`'
+* Use '`~`' to indicate a non-breaking space and prevent LaTeX from inserting a line break at this location. Examples include
+    * (if you're not using `cleveref`) in references to named parts: `Chapter~1`, `Appendix~A`
+    * between multiple given names of people: `Donald.~E. Knuth`, `Louis~XVI`
+    * in mathematical sentences: `less than~\(\epsilon\)`, `define the function~\(f(x)\)`
+    * in enumerations: `this is (1)~dumb; (2)~useless.`
+    but are far from being exhaustive. Think of any sentence bit where it 'flows' and makes sense for the reader.
+
+* Use the [`csquotes`](https://ctan.org/pkg/csquotes?lang=en) package to ensure the quotation marks you're using are consistent with the main language of your document with the `\enquote` command:
+
+    ```
+    % \usepackage[french]{babel}
+    \usepackage[british]{babel}
+    \usepackage{csquotes}
+
+    % He said: \enquote{bonjour} % produces << bonjour >>
+    He said: \enquote{hello}     % produces `Hello'
+    ```
 
 * Pay attention to correct spacing when using a period within a sentence. The `.\` and `\@` commands tell LaTeX your sentence does not end.
     * `This is a sentence w.\ a forced inter-word space.`
     * `This is done by XYZ\@. This is a new sentence.`
 
     The latter case should not happen often if you use the `glossaries[-extra]` package for your abbreviations with a `\gls{xyz}` command.
+
+* The correct way to obtain an ellipsis `(...)` punctuation symbol is to use `\ldots`.
 
 * Add to your preamble
 
@@ -195,7 +226,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     ```
     to force LaTeX to avoid widows and orphans (dangling lines at the beginning or end of a paragraph separated from the rest).
 
-* If you use 'exotic' words for LaTeX, it doesn't know how to hyphenate them, potentially leading to [overfull boxes warnings](https://tex.stackexchange.com/a/34727). Use '`\hyphenation{Chi-ches-ter}`' in your preamble to manually declare hyphenation patterns.
+* If you use 'exotic' words for LaTeX, it doesn't know how to hyphenate them, potentially leading to [overfull box warnings](https://tex.stackexchange.com/a/34727). Use '`\hyphenation{Chi-ches-ter}`' in your preamble to manually declare hyphenation patterns.
 
 * Also, LaTeX doesn't hyphenate words that are already hyphenated. In necessary cases you need to add '`\-`' in-text to force hyphenation, such as '`This is a three-dimen\-sional phenomenon.`'.
 
@@ -332,15 +363,19 @@ Many people say LaTeX is the worst for float (figures, tables) placement. This i
 
     ```
     We discussed this in Chap.~\ref{chap:intro}.
-    Equation~\ref{eq:chap-intro-myeq} is very important, as shown in Fig.~\ref{fig:chap-intro-sketch}.
+    Equation~\ref{eq:chap-intro-myeq} is important, as shown in Fig.~\ref{fig:chap-intro-sketch}.
     ```
     just use
 
     ```
     We discussed this in \cref{chap:intro}.
-    \Cref{eq:chap-intro-myeq} is very important, as shown in \cref{fig:chap-intro-sketch}.
+    \Cref{eq:chap-intro-myeq} is important, as shown in \cref{fig:chap-intro-sketch}.
     ```
-    If you only need the label in the text, use `\labelcref`: `... described by the Maxwell equations \labelcref{eq:chap-intro-maxwell}.`
+    If you only need the label in the text, use `\labelcref`:
+
+    ```
+    ... described by the Maxwell equations \labelcref{eq:chap-intro-maxwell}.
+    ```
 
 * Adopt a consistent key system for your bibliography entries, with a letter prefix to disambiguate works in a same year for one author:
 
@@ -370,7 +405,7 @@ Many people say LaTeX is the worst for float (figures, tables) placement. This i
 
 * Use the same colors in matplotlib and LaTeX. I like to use HTML color codes in Matplotlib (`MyRed= '#cc0000'`) and in LaTeX thanks to the `xcolor` package: `\definecolor{MyRed}{HTML}{cc0000}`.
 
-* Do not add the figure extension in `\includegraphics`.
+* Do not add the file extension in `\includegraphics`.
 
 In your LaTeX source files, including figures should look like
 
@@ -401,7 +436,7 @@ In your LaTeX source files, including figures should look like
 
 ## Bibliography
 
-* First, you may want to use the recent `biblatex` *package* with the `biber` *backend* which handles accentuated letters seamlessly. Avoid using the old `natbib` *package* which uses the `bibtex` *backend*. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib).
+* First, you may want to use the recent `biblatex` *package* with the `biber` *backend* which handles accentuated letters seamlessly. Avoid using the archaic `natbib` *package* which uses the `bibtex` *backend*. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib).
 
 * Find the biblatex package (e.g. `biblatex-phys`) or style (e.g. the option '`[style=apa]`' ) closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customize.
 
@@ -409,7 +444,7 @@ In your LaTeX source files, including figures should look like
 
 * Remove the useless fields in the `.bib` entries.
 
-* The [doi2bib](https://doi2bib.org/) website is very handy.
+* The [doi2bib](https://doi2bib.org/) website is very handy to provide the `.bib` entry using the DOI.
 
 * Capitalise all content words for titles:
 
