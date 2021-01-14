@@ -80,7 +80,6 @@ Add point that one modification affects whole document use vec and chapterspace 
     ```
     in your preamble to automatically warn you when using deprecated features in terms of packages and commands, including maths.
 
-*
 
 ## Packages
 
@@ -312,17 +311,19 @@ Many people say LaTeX is the worst for float placement. This is simply wrong. By
 
 * The reason is that the PDF backend of Matplotlib is not optimized. I always observe a O(10) or a O(100) factor of size decrease between exporting in EPS and converting to PDF instead of saving directly in PDF.
 
+* If you have many data points and plot it (with e.g. `plot`, `scatter` or a `pcolormesh`) the vector format is not appropriate and will lead to bloated, slowly-loading files. Use the `rasterized = True` keyword to alleviate that issue. Note that you need a DPI high enough to ensure quality, and you'll have to save the figure directly in PDF.
+
 * Ensure your Matplotlib figure layout and fonts match that of your LaTeX document. I recommand using a [style sheet](https://matplotlib.org/3.3.3/gallery/style_sheets/style_sheets_reference.html) where you can replicate your LaTeX preamble and globally define your plot settings.
 
 * Your [style sheet](./examples/latex.mplstyle) should be put in `MPLCONFIGDIR/stylelib`. On Mac OS, `MPLCONFIGDIR` is usually `~/.matplotlib`. On Linux, `MPLCONFIGDIR` is usually `~/.config/matplotlib`. You can get the value of `MPLCONFIGDIR` by calling the Matplotlib function `get_configdir()` in Python. Then in your figure script, add the line `matplotlib.pyplot.style.use('thesis')` to use your style sheet. You could then create a style sheet for your thesis, for your articles and reports and quickly jump from one to another.
 
-* Directly plot your graphics at the correct, final size to ensure consistent fonts with your LaTeX document. I found that the `set_size` function in the [J. Walton's guide](https://jwalton.info/Embed-Publication-Matplotlib-Latex/) does the job perfectly. Determine your LaTeX document text width using `\showthe\textwidth` or by checking the log file. Then you need to decide which portion of the width your figure should take. Eventually, just include the figure in LaTeX, and do *not* adjust nor distort its size with `[width=0.5\textwidth]` or `[scale=0.3]`.
+* Directly plot your graphics at the correct, final size to ensure consistent fonts with your LaTeX document. I found that the `set_size` function in the [J. Walton's guide](https://jwalton.info/Embed-Publication-Matplotlib-Latex/) does the job perfectly. Determine your LaTeX document text width using `\showthe\textwidth` or by checking the log file. Then you need to decide which portion of the width your figure should take. Eventually, just include the figure in LaTeX, and do *not* adjust nor distort its size with `[width=XXX\textwidth]` or `[scale=XXX]`.
 
 * Use the same colors in matplotlib and LaTeX. I like to use HTML color codes in Matplotlib (`MyRed= '#cc0000'`) and in LaTeX thanks to the `xcolor` package: `\definecolor{MyRed}{HTML}{cc0000}`.
 
 * Do not add the figure extension in `\includegraphics`.
 
-A combination of these recommendations in your LaTeX source looks like
+In your LaTeX source files, including figures should look like
 
 ```
 % python3 ${HOME}/paper1/plots/plot_variable.py
@@ -332,12 +333,6 @@ A combination of these recommendations in your LaTeX source looks like
   \label{fig:chap-results_variable}
 \end{figure}
 ```
-
-\the\textwidth
-
-* The
-
-* With Python and Matplotlib, use that
 
 
 ## Syntax and spell-check
@@ -447,4 +442,3 @@ Among other features it must embed all fonts and include standardised metadata.
 
 * [An essential guide to LaTex2e usage](http://mirrors.ctan.org/info/l2tabu/english/l2tabuen.pdf)
 * [Chicago Manual of Style](https://www.chicagomanualofstyle.org/)
-
