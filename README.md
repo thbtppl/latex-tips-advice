@@ -21,6 +21,7 @@ Feel free to raise an issue or submit a pull request if you see something is mis
 * [Some typesetting advice](#some-typesetting-advice)
 * [Maths](#maths)
 * [Floating objects and captions](#floating-objects-and-captions)
+* [Cross-referencing](#cross-referencing)
 * [Including graphics](#including-graphics)
 * [Syntax and spell check](#syntax-and-spell-check)
 * [Bibliography](#bibliography)
