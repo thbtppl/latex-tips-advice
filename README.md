@@ -6,7 +6,7 @@ As of 2021, LaTeX2e (LaTeX) has grown to a mature ecosystem for typesetting beau
 However, it has a steep learning curve, and writing a large document can be sometimes daunting, especially for people without a 'coding' mindset.
 Since [LaTeX3 won't replace and unify LaTeX2e components](https://tex.stackexchange.com/a/572177), you still need to load manually many individual packages and will probably deal with rather obscure commands at times.
 
-This series of tips and tricks targets beginner to intermediate LaTeX users and compiles recommendations gathered along the writing of my PhD thesis.
+This series of tips and tricks targets beginner to intermediate LaTeX users and compiles modern recommendations gathered along the writing of my PhD thesis.
 The following best practices are generic, but are mainly focused on the generation of scientific PDFs using the default `pdflatex` engine.
 You can see in action what is listed here in the [PhD thesis template](https://github.com/thbtppl/latex-thesis-imperial) I shared.
 
@@ -57,14 +57,14 @@ You can also declare the folders containing your external graphics, which is cle
 
 * In your document, separate the format/layout from the actual content:
     * Create a modular document with different folders and files
-    * Do not put hard-coded settings/values within your content (e.g. \vspace{10cm})
+    * Do not put hard-coded settings/values within your content (e.g. `\vspace{10cm}`)
     * Instead, define commands with semantically appropriate names for your settings, lengths, maths, colors...
 
-* By defining global commands, your source files are more readable, and you ensure a consistent display of your document. Furthermore, only one line shall be changed if you wish to adjust the setting, instead of manually correcting each occurrence. For example, you can define a bold matrix in math mode following `\newcommand*{\mat}[1]{\boldsymbol{#1}}` and can be quickly changed to a double-bar notation everywhere using `\newcommand*{\mat}[1]{\overline{\overline{#}}}`.
+* By defining global commands, your source files are more readable, and you ensure a consistent display of your document. Furthermore, only one line shall be changed if you wish to adjust the setting, instead of manually correcting each occurrence. For example, you can define a bold matrix in math mode following `\newcommand*{\mat}[1]{\boldsymbol{#1}}` and can be quickly changed to a double-bar notation everywhere using `\newcommand*{\mat}[1]{\overline{\overline{#1}}}`.
 
-* Use `\newcommand*` and `\renewcommand*` instead of the non-starred variants as a good practice. The [starred](https://tex.stackexchange.com/questions/1050/whats-the-difference-between-newcommand-and-newcommand) variants ensure you're defining a `short` command whose arguments cannot contain a line break or a new paragraph. If using a much longer argument, you should probably think about [defining a new environment](https://www.overleaf.com/learn/latex/Environments#Defining_environments_with_parameters).
+* Use `\newcommand*` and `\renewcommand*` instead of the non-starred variants as a good practice. The [starred](https://tex.stackexchange.com/questions/1050/whats-the-difference-between-newcommand-and-newcommand) variants ensure you're defining a 'short' command whose arguments cannot contain a line break or a new paragraph. If using a much longer argument, you should probably think about [defining a new environment](https://www.overleaf.com/learn/latex/Environments#Defining_environments_with_parameters).
 
-* Use the `import` package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled. For example, you could have in your main file:
+* Use the [`import`](https://ctan.org/pkg/import?lang=en) package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled. For example, you could have in your main file:
 
     ```latex
     \import{./}{titlepage.tex}
@@ -175,7 +175,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     described in \cref{eq1},
     \begin{equation}
       y = x
-    \label{eq1}
+      \label{eq1}
     \end{equation}
     ```
     and not
@@ -185,7 +185,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
     \begin{equation}
       y = x
-    \label{eq1}
+      \label{eq1}
     \end{equation}
     ```
     as you would get wrong vertical spacing.
@@ -198,6 +198,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     * in mathematical sentences: `less than~\(\epsilon\)`, `define the function~\(f(x)\)`
     * in enumerations: `this is (1)~dumb; (2)~useless.`
     * in-text citations with a non-superscript numeric style ('[1]') bibliography : `as demonstrated in~\textcite{smith2000}`
+
     but are far from being exhaustive. Think of any sentence bit that must 'flow' and would bother the eye of the reader if the line is broken.
 
 * Use the [`csquotes`](https://ctan.org/pkg/csquotes?lang=en) package to ensure the quotation marks are consistent with the main language of your document, with the `\textquote` command:
@@ -212,13 +213,13 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     ```
     Don't write quotations marks manually (backtick and quote signs).
 
-* Pay attention to correct spacing when using a period within a sentence. The `.\` and `\@` commands tell LaTeX your sentence does not end.
-    * `This is a sentence w.\ a forced inter-word space.`
-    * `This is done by XYZ\@. This is a new sentence.`
+* Pay attention to correct spacing when using a period within a sentence.
+    * The `.\` command tells LaTeX that your sentence does not end: `This car w.\ a blue livery is nice.`
+    * Use `\@` for a sentence-ending dot after a capital letter as LaTeX otherwise assumes an abbreviation: `France is part of the EU\@. The UK isn't anymore.`
 
     The latter case should not often happen if you use the `glossaries[-extra]` package for your abbreviations with a `\gls{xyz}` command.
 
-* The correct way to obtain an ellipsis `(...)` punctuation symbol is to use `\ldots`.
+* The correct way to obtain an ellipsis `(...)` punctuation symbol is to use `\ldots`. The `csquotes` package provides `\textelp{}` for `[...]`. 
 
 * Use the `draft` option of `\documentclass` to highlight in black where your text or figures exceeds the margin boundary. In that case, don't forget to load `microtype` with the `final` option if using that package.
 
@@ -273,7 +274,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     \end{equation}
     ```
 
-* Using `\dfrac` forces the fraction into display mode which can be useful is you reckon `\frac` is not large enough in an equation.
+* Using `\dfrac` forces the fraction into display mode, which can be useful if you reckon `\frac` is not large enough in an equation.
 
 * Display equations are part of the flow of your document, and you should treat them as an integral element of your paragraph. Therefore, if they end a sentence, they should end with a period. I would argue that using commas at the end of equations is more a matter of style, and could clutter your document.
 
@@ -318,7 +319,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     The radius of the circle is 10 mm.
     Pressure is usually expressed in kg.m\textsuperscript{-1}.s\textsuperscript{-1}.
     It seems the ship has travelled 100 NM.
-    The angle was 4.5\textdegree
+    The angle was 4.5\textdegree.
     I estimate at least 15,000 parts in this machine and probably \(10^{6}\) to \(10^{7}\) cells in this experiment.
     ```
     If you're writing in British English, you can activate automatically the comma separator between thousands.
@@ -369,11 +370,11 @@ Many people say LaTeX is the worst for float (figures, tables) placement. This i
     \end{figure}
     ```
 
-* Loading the [`caption`](https://ctan.org/pkg/caption?lang=en) package fixes a known problem of `hyperref` where the hyperlink anchor placement of a figure points to to the caption rather than the beginning of the figure.
+* Loading the [`caption`](https://ctan.org/pkg/caption?lang=en) package fixes a known problem of `hyperref` where the hyperlink anchor placement of a figure points to the caption rather than the beginning of the figure.
 
 ## Cross-referencing
 
-* For a multi-part or multi-chapter project, do not number or use labels with numbers (chap1, chap2, ...) as it will cause complications if swapping them. Use a short key instead (chap-intro, chap-method, ...).
+* For a multi-part or multi-chapter project, do not number folders\files nor use labels with numbers (chap1, chap2, ...) as it will cause complications if swapping them. Use a short key instead (chap-intro, chap-method, ...).
 
 * Add systematically a `\label` for every part, chapter, section, subsection, appendix, equation, figure or table and adopt a consistent syntax. To find my way around, I like to use the chapter location in every label:
 
@@ -414,19 +415,17 @@ Many people say LaTeX is the worst for float (figures, tables) placement. This i
     @article{smith2020b, ...
     ```
 
-* With `biblatex`, use the `\autocite` command for reference citations. You can adjust its behavior by passing a package option. If your citation is an object or a subject in a sentence, use `\textcite` can be used. The capitalized commands are there for usage at the beginning of a sentence (`\Autocite`,`\Textcite`).
+* With `biblatex`, use the `\autocite` command for reference citations. You can adjust its behavior by passing a package option. If your citation is an object or a subject in a sentence, use `\textcite`. The capitalized commands are there for usage at the beginning of a sentence (`\Autocite`,`\Textcite`).
 
 ## Including graphics
 
 * Use one script per figure and put a comment in your LaTeX document that gives the command used to create the figure and its path. This is an efficient way of working as you'll most likely need to adjust or recreate your graphics.
 
-* With Matplotlib, I suggest to output graphics in the EPS format. Then, use the `epstopdf` utility included in most TeX distributions to convert them to PDF.
+* With Matplotlib, I suggest to output graphics in the EPS format. Then, use the `epstopdf` utility included in most TeX distributions to convert them to PDF. The reason is that the PDF backend of Matplotlib is not optimized. I always observe a O(10) or a O(100) factor of size decrease between exporting in EPS and converting to PDF instead of saving directly in PDF.
 
 * Finally, use the `pdfcrop` utility to remove the unneeded white space surrounding your figure. Using `bbox_inches = 'tight'` in the `savefig` function of Matplotlib is not enough.
 
-* The reason is that the PDF backend of Matplotlib is not optimized. I always observe a O(10) or a O(100) factor of size decrease between exporting in EPS and converting to PDF instead of saving directly in PDF.
-
-* If you have many data points and plot it (with e.g. `plot`, `scatter` or a `pcolormesh`) the vector format is not appropriate and will lead to bloated, slowly-loading files. Use the `rasterized = True` keyword to alleviate that issue and rasterize the large dataset, while maintaining vector graphics elsewhere. Note that you need a DPI high enough to ensure quality, and you'll have to save the figure directly in PDF.
+* If you have many data points and plot it (with e.g., `plot`, `scatter` or `pcolormesh`) the vector format is not appropriate and will lead to bloated, slowly-loading files. Use the `rasterized = True` keyword to alleviate that issue and rasterize the large dataset, while maintaining vector graphics elsewhere. Note that you need a DPI high enough to ensure quality, and you'll have to save the figure directly in PDF.
 
 * Ensure your Matplotlib figure layout and fonts match that of your LaTeX document. I recommand using a [style sheet](https://matplotlib.org/3.3.3/gallery/style_sheets/style_sheets_reference.html) where you can replicate your LaTeX preamble and globally define your plot settings.
 
@@ -477,7 +476,7 @@ while the table captions are always above the data itself, therefore you should 
 
 * The [LTeX](https://marketplace.visualstudio.com/items?itemName=valentjn.vscode-ltex) extension of VS Code is a good spell/grammar checker, based on [LanguageTool](https://languagetool.org/).
 
-* The `lacheck` utility shipped with most LaTeX distributions is also good at detecting questionable syntax in your `.tex` files. Note some false positives will be raised due to the use of some packages. `chktex` performs poorly compared to `lacheck`.
+* The `lacheck` utility shipped with most LaTeX distributions is also good at detecting questionable syntax in your `.tex` files. Note some false positives will be raised due to the use of some packages. There is also `chktex`.
 
 * You can check your bibliography file using `biber --tool --validate-datamodel main.bib`.
 
@@ -505,7 +504,7 @@ while the table captions are always above the data itself, therefore you should 
     ```
     title = {On the Electrodynamics of Moving Bodies}
     ```
-    instead of
+    instead of the *sentence-case*
 
     ```
     title = {On the electrodynamics of moving bodies}
