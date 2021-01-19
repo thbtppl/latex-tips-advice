@@ -10,7 +10,7 @@ This series of tips and tricks targets beginner to intermediate LaTeX users and 
 The following best practices are generic, but are mainly focused on the generation of scientific PDFs using the default `pdflatex` engine.
 You can see in action what is listed here in the [PhD thesis template](https://github.com/thbtppl/latex-thesis-imperial) I shared.
 
-Feel free to raise an issue or submit a pull request if you see something is missing or if you disagree with the following claims!
+Feel free to raise an issue or submit a pull request if you see something is missing, or if you simply disagree with the following claims!
 
 
 ## Contents
@@ -61,11 +61,11 @@ You can also declare the folders containing your external graphics, which is cle
     * Do not put hard-coded settings/values within your content (e.g. `\vspace{10cm}`)
     * Instead, define commands with semantically appropriate names for your settings, lengths, maths, colors...
 
-* By defining global commands, your source files are more readable, and you ensure a consistent display of your document. Furthermore, only one line shall be changed if you wish to adjust the setting, instead of manually correcting each occurrence. For example, you can define a bold matrix in math mode following `\newcommand*{\mat}[1]{\boldsymbol{#1}}` and can be quickly changed to a double-bar notation everywhere using `\newcommand*{\mat}[1]{\overline{\overline{#1}}}`.
+* By defining global commands, your source files are more readable, and you ensure a consistent display of your document. Furthermore, only one line shall be changed if you wish to adjust the setting, instead of manually correcting each occurrence. For example, you can define a bold matrix in math mode following `\newcommand*{\mat}[1]{\boldsymbol{#1}}` which can be quickly changed to a double-bar notation everywhere using `\newcommand*{\mat}[1]{\overline{\overline{#1}}}`.
 
-* Use `\newcommand*` and `\renewcommand*` instead of the non-starred variants as a good practice. The [starred](https://tex.stackexchange.com/questions/1050/whats-the-difference-between-newcommand-and-newcommand) variants ensure you're defining a 'short' command whose arguments cannot contain a line break or a new paragraph. If using a much longer argument, you should probably think about [defining a new environment](https://www.overleaf.com/learn/latex/Environments#Defining_environments_with_parameters).
+* Use `\newcommand*` and `\renewcommand*` instead of the non-starred variants as a good practice. The [starred](https://tex.stackexchange.com/questions/1050/whats-the-difference-between-newcommand-and-newcommand) variants ensure you're defining a 'short' command whose arguments cannot contain a line break or a new paragraph. If using such a longer argument, you should probably think about [defining a new environment](https://www.overleaf.com/learn/latex/Environments#Defining_environments_with_parameters).
 
-* Use the [`import`](https://ctan.org/pkg/import?lang=en) package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to the external file can be handled. For example, you could have in your main file:
+* Use the [`import`](https://ctan.org/pkg/import?lang=en) package to include other files if you have a multi-folder project structure. It is more flexible than the `\include` and `\input` commands to the extent that any relative path to external files and nested paths can be handled. For example, you could have in your main file:
 
     ```latex
     \import{./}{titlepage.tex}
@@ -86,17 +86,6 @@ You can also declare the folders containing your external graphics, which is cle
     ```
     in your preamble to automatically warn you when using deprecated features in terms of packages and commands, including maths.
 
-* Using the [`microtype`](https://ctan.org/pkg/microtype?lang=en) package will always improve the aesthetics of your document, even with the default settings. However, do not forget to disable character protrusion in listed environments such as the table of contents:
-
-    ```latex
-    \microtypesetup{protrusion=false}
-
-    \tableofcontents
-    \listoffigures
-    \listoftables
-
-    \microtypesetup{protrusion=true}
-    ```
 
 ## Packages
 
@@ -124,11 +113,11 @@ You can also declare the folders containing your external graphics, which is cle
     * `caption`: customize the appearance of captions
     * `subcaption`: allows individual caption for each subfigure of a figure
     * `siunitx`: ensure consistent use of numbers and/or units across the document
-    * `pdfx`: for PDF/A compliance
+    * `pdfx`: for PDF/A (or PDF/X) compliance
     * `xcolor`: support for colors with different color models
     * `hyperref`: to produce hyperlinks everywhere in the document
     * `cleveref`: smart cross-referencing for document components
-    * `bookmark`: handle PDF bookmarks
+    * `bookmark`: customize PDF bookmarks
     * `glossaries-extra`: support for glossaries, lists of symbols/acronyms
 
 * If compatible, try to pass the general options of your project to the `\documentclass` command. They will be seen by relevant packages.
@@ -189,11 +178,11 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
       \label{eq1}
     \end{equation}
     ```
-    as you would get wrong vertical spacing.
+    as you would get wrong vertical spacing. Use the [`parskip`](https://ctan.org/pkg/parskip) package to set your desired behavior between paragraphs.
 
 * To force whitespace after a user-defined command that produces text, add empty curly braces: `\com{}` instead of `\com`.
 
-* Understand the power of '`~`' to indicate a non-breaking space, and prevent LaTeX from inserting a line break at this location. Examples include
+* Understand the power of '`~`' to indicate a non-breaking space, hence preventing LaTeX from inserting a line break at this location. Examples include
     * (if you're not using `cleveref`) in references to named parts: `Chapter~1`, `Appendix~A`
     * between multiple given names of people: `Donald.~E. Knuth`, `Louis~XVI`
     * in mathematical sentences: `less than~\(\epsilon\)`, `define the function~\(f(x)\)`
@@ -209,10 +198,10 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
     \usepackage[british]{babel}
     \usepackage{csquotes}
 
-    % He said: \textquote{bonjour} % produces << bonjour >>
-    He said: \textquote{hello}     % produces `Hello'
+    % He said \textquote{Bonjour} % produces << Bonjour >>
+    He said \textquote{Hello}     % produces `Hello'
     ```
-    Don't write quotations marks manually (backtick and quote signs).
+    Don't type quotation marks manually (backtick and quote signs).
 
 * Pay attention to correct spacing when using a period within a sentence.
     * The `.\` command tells LaTeX that your sentence does not end: `This car w.\ a blue livery is nice.`
@@ -237,6 +226,18 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 * If you use 'exotic' words for LaTeX, it doesn't know how to hyphenate them, potentially leading to [overfull box warnings](https://tex.stackexchange.com/a/34727). Use '`\hyphenation{Chi-ches-ter}`' in your preamble to manually declare hyphenation patterns.
 
 * Also, LaTeX doesn't hyphenate words that are already hyphenated. In necessary cases you need to add '`\-`' in-text to force hyphenation, such as '`This is a three-dimen\-sional phenomenon.`'.
+
+* Using the [`microtype`](https://ctan.org/pkg/microtype?lang=en) package will always improve the aesthetics of your document, even with the default settings. However, do not forget to disable character protrusion in listed environments such as the table of contents:
+
+    ```latex
+    \microtypesetup{protrusion=false}
+
+    \tableofcontents
+    \listoffigures
+    \listoftables
+
+    \microtypesetup{protrusion=true}
+    ```
 
 * Avoid manual spacing in your document like `\hspace{5mm}` or `\vspace{1cm}`. You should rather use commands predefined by your document class such as `\medskip`, `\bigbreak`, or font-dependant commands like `\enskip` or `\quad`. Great lists for horizontal and vertical spacing commands may be found [here](https://tex.stackexchange.com/a/7435) and [there](https://tex.stackexchange.com/a/41488).
 
@@ -279,7 +280,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
 * Display equations are part of the flow of your document, and you should treat them as an integral element of your paragraph. Therefore, if they end a sentence, they should end with a period. I would argue that using commas at the end of equations is more a matter of style, and could clutter your document.
 
-* To get correct horizontal alignment in such necessary cases, you can use the `\phantom` command to mask the character and simulate the spacing:
+* To get correct horizontal alignment in necessary cases, you can use the `\phantom` command to mask the character and simulate the spacing:
 
     ```latex
     \begin{equation}
@@ -488,7 +489,7 @@ while the table captions are always above the data itself, therefore you should 
 
 ## Bibliography
 
-* First, you may want to use the recent `biblatex` *package* with the `biber` *backend* which handles accentuated letters seamlessly. Avoid using the archaic `natbib` *package* which uses the `bibtex` *backend*. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib).
+* First, you may want to use the recent `biblatex` *package* with the `biber` *backend* which handles accented letters seamlessly. Avoid using the archaic `natbib` *package* which uses the `bibtex` *backend*. People are often [confused](https://tex.stackexchange.com/questions/25701/bibtex-vs-biber-and-biblatex-vs-natbib).
 
 * Find the `biblatex` package (e.g. `biblatex-phys`) or style (e.g. the option '`[style=apa]`') closest to the bibliography style you want to use. Tweaking it to your needs is straightforward as `biblatex` is easy to customize.
 
