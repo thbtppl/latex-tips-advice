@@ -427,6 +427,8 @@ Many people say LaTeX is the worst for float (figures, tables) placement. This i
 
 * Finally, use the `pdfcrop` utility to remove the unneeded white space surrounding your figure. Using `bbox_inches = 'tight'` in the `savefig` function of Matplotlib is not enough.
 
+* Recall the EPS format does not handle transparency.
+
 * If you have many data points and plot it (with e.g., `plot`, `scatter` or `pcolormesh`) the vector format is not appropriate and will lead to bloated, slowly-loading files. Use the `rasterized = True` keyword to alleviate that issue and rasterize the large dataset, while maintaining vector graphics elsewhere. Note that you need a DPI high enough to ensure quality, and you'll have to save the figure directly in PDF.
 
 * Ensure your Matplotlib figure layout and fonts match that of your LaTeX document. I recommand using a [style sheet](https://matplotlib.org/3.3.3/gallery/style_sheets/style_sheets_reference.html) where you can replicate your LaTeX preamble and globally define your plot settings.
