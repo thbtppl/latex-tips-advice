@@ -513,7 +513,7 @@ while the table captions are always above the data itself, therefore you should 
     ```
     title = {On the electrodynamics of moving bodies}
     ```
-    In this way, you can easily switch from title-case to sentence-case using a `biblatex` option. Conversely, if you forget that and the bibliography needs to be title-case, you will have to add all missing capitals manually.
+    In this way, you can easily switch from title-case to sentence-case using a `biblatex` option. Conversely, if you forget that and the bibliography needs to be title-case, you will have to add all missing capitals manually. [Here](https://capitalizemytitle.com/) is a handy tool for switching between both types.
 
 * Surround words that remain capitalized at all times using curly brackets:
 
