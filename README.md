@@ -136,6 +136,7 @@ For example, the language option in `\documentclass[UKenglish]{article}` will be
 
     The manual of `pdfx` recommends loading it as early as possible, but since it automatically loads `hyperref` I would recommend loading it just before `hyperref`.
 
+* Keep your LaTeX distirbution and packages up-to-date, to not suffer from legacy issues and having to put dirty workaround code in your document. Most of the packages listed above are actively maintainted to correct bugs.
 
 ## Some typesetting advice
 
